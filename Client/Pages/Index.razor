@@ -12,8 +12,6 @@
 
 <PageTitle>Index</PageTitle>
 
-
-<div class="box">
 <div class="title">
     <h1>Welcome to Comforix</h1>
 </div>
@@ -26,15 +24,15 @@
 
 @if (_showStep2)
 {
-    <div class="centre-wrap">
+    <div class="centre">
         <br/>
         @if (_buttonsP.Count is not 0)
         {
             for (var i = 0; i < _buttonsP.Count; ++i)
             {
                 int index = i;
-                <button class="@(_buttonsP[index].Selected ? "button-design-dark-selected" : "button-design-dark")" @onclick="() => { Step2Selected(_buttonsP[index].PhysicalIssue, index); }">@string.Join(' ', _buttonsP[index].PhysicalIssue.ToString().Split('_'))</button>
-                if (index % 6 is 0 && index is not 0)
+                <button class="button-design-dark" style="color: @(_buttonsP[index].Selected ? "#ffffff" : "#000000"); background-color: @(_buttonsP[index].Selected ? "#0c63e4" : "#ffffff")" @onclick="() => { Step2Selected(_buttonsP[index].PhysicalIssue, index); }">@string.Join(' ', _buttonsP[index].PhysicalIssue.ToString().Split('_'))</button>
+                if (i % 6 is 0 && i is not 0)
                 {
                     <br/>
                     <br/>
@@ -46,8 +44,8 @@
             for (var i = 0; i < _buttonsE.Count; ++i)
             {
                 int index = i;
-                <button class="@(_buttonsE[index].Selected ? "button-design-dark-selected" : "button-design-dark")" @onclick="() => { Step2Selected(_buttonsE[index].EmotionalIssue, index); }">@string.Join(' ', _buttonsE[index].EmotionalIssue.ToString().Split('_'))</button>
-                if (index % 6 is 0 && index is not 0)
+                <button class="button-design-dark" style="color: @(_buttonsE[index].Selected ? "#ffffff" : "#000000"); background-color: @(_buttonsE[index].Selected ? "#0c63e4" : "#ffffff")" @onclick="() => { Step2Selected(_buttonsE[index].EmotionalIssue, index); }">@string.Join(' ', _buttonsE[index].EmotionalIssue.ToString().Split('_'))</button>
+                if (i % 6 is 0 && i is not 0)
                 {
                     <br/>
                     <br/>
@@ -59,8 +57,8 @@
             for (var i = 0; i < _buttonsB.Count; ++i)
             {
                 int index = i;
-                <button class="@(_buttonsB[index].Selected ? "button-design-dark-selected" : "button-design-dark")" @onclick="() => { Step2Selected(_buttonsB[index].Issue, index); }">@string.Join(' ', _buttonsB[index].Issue.ToString().Split('_'))</button>
-                if (index % 6 is 0 && index is not 0)
+                <button class="button-design-dark" style="color: @(_buttonsB[index].Selected ? "#ffffff" : "#000000"); background-color: @(_buttonsB[index].Selected ? "#0c63e4" : "#ffffff")" @onclick="() => { Step2Selected(_buttonsB[index].Issue, index); }">@string.Join(' ', _buttonsB[index].Issue.ToString().Split('_'))</button>
+                if (i % 6 is 0 && i is not 0)
                 {
                     <br/>
                     <br/>
@@ -204,7 +202,7 @@
 
     #endregion
 
-    #region Login/Register
+    #region Login/register
 
     private string? _uname, _pwd;
     private bool _showSalting, _showSending, _showComplete, _showError, _showDatabaseConnectionError;
@@ -308,4 +306,3 @@
     #endregion
 
 }
-</div>
