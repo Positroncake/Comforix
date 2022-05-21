@@ -38,8 +38,11 @@
 
 @if (_showStep2)
 {
-    <button class="button-design" @onclick="() => { Step2Selected(Issue.SomethingElse); }">Something else</button>
-    <button class="button-design" @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
+    <div class="centre">
+        <br/>
+        <button class="button-design" @onclick="() => { Step2Selected(Issue.SomethingElse); }">Something else</button>
+        <button class="button-design" @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
+    </div>
 }
 
 @if (_showStep3)
@@ -86,3 +89,4 @@
     }
 
 }
+
