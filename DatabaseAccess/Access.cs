@@ -6,7 +6,7 @@ namespace DatabaseAccess;
 
 public class Access : IAccess
 {
-    public async Task<List<T>> QueryAsync<T, TU>(string sql, TU parameters, string connectionString)
+    public async Task<List<T>> QueryAsync<T, TU>(string sql, TU parameters)
     {
         using IDbConnection connection = new MySqlConnection("Server=127.0.0.1;Port=3306;Database=comforix;Uid=comforix_db;Pwd=aKrL72CMwomSkoMzvufz3CfmuUzuWT5o");
         // ReSharper disable once HeapView.PossibleBoxingAllocation
@@ -14,7 +14,7 @@ public class Access : IAccess
         return rows.ToList();
     }
     
-    public Task ExecuteAsync<T>(string sql, T parameters, string connectionString)
+    public Task ExecuteAsync<T>(string sql, T parameters)
     {
         using IDbConnection connection = new MySqlConnection("Server=127.0.0.1;Port=3306;Database=comforix;Uid=comforix_db;Pwd=aKrL72CMwomSkoMzvufz3CfmuUzuWT5o");
         // ReSharper disable once HeapView.PossibleBoxingAllocation

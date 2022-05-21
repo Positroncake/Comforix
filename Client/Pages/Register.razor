@@ -56,10 +56,10 @@
         }
 
         _showSalting = true;
-        byte[] pwd = Encoding.UTF32.GetBytes(_pwd);
-        byte[] salt = GenerateSalt();
-        _hash = pwd.Concat(salt).ToArray();
-        await ComputeSaltedHash();
+        byte[] pwd = Encoding.UTF32.GetBytes(_pwd); // Convert password to byte array
+        byte[] salt = GenerateSalt(); // Create salt byte array
+        _hash = pwd.Concat(salt).ToArray(); // Combine password byte array and salt byte array
+        await ComputeSaltedHash(); // Hash (SHA-512)
 
         _showSending = true;
         StateHasChanged();
