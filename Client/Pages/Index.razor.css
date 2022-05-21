@@ -15,6 +15,15 @@
     justify-content: center;
 }
 
+.centre-margin-top {
+    margin-top: 100px;
+    width: 80%;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .title {
     margin: auto;
     width: 80%;
