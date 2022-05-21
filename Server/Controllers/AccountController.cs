@@ -13,7 +13,7 @@ public class AccountController : ControllerBase
 
     [HttpPost]
     [Route("New")]
-    public async Task<ActionResult> NewAcc(Account account)
+    public async Task<ActionResult> NewAcc([FromBody] Account account)
     {
         IAccess database = new Access();
 
@@ -46,12 +46,12 @@ public class AccountController : ControllerBase
 
     [HttpPost]
     [Route("Login")]
-    public async Task<ActionResult> LoginToAcc(LoginReq request)
+    public async Task<ActionResult> LoginToAcc([FromBody] LoginReq request)
     {
         // Check if account exists. If exists, retrieve
-        IAccess access = new Access();
+        IAccess database = new Access();
         const string sql = "SELECT * FROM accounts WHERE Username = @Username LIMIT 1";
-        List<Account> accounts = await access.QueryAsync<Account, dynamic>(sql, new
+        List<Account> accounts = await database.QueryAsync<Account, dynamic>(sql, new
         {
             Username = request.Username
         });
@@ -69,5 +69,20 @@ public class AccountController : ControllerBase
         if (hash.SequenceEqual(selected.PasswordHash) is false) return Unauthorized();
         string token = await TokenUtils.NewToken(selected.Username);
         return Ok(token);
+    }
+
+    [HttpGet]
+    [Route("FindUsers/{level1Filter}/{level2Filter}")]
+    public async Task<ActionResult> FindUsersWithFilter(int level1Filter, int level2Filter)
+    {
+        IAccess database = new Access();
+        const string sql = "SELECT * FROM accounts WHERE Level1 = @Level1 AND Level2 = @Level2";
+        List<Account> matches = await database.QueryAsync<Account, dynamic>(sql, new
+        {
+            Level1 = level1Filter,
+            Level2 = level2Filter
+        });
+
+        return Ok();
     }
 }
