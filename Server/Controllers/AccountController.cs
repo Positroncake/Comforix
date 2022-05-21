@@ -77,13 +77,13 @@ public class AccountController : ControllerBase
     public async Task<ActionResult> FindUsersWithFilter(int level1Filter, int level2Filter)
     {
         IAccess database = new Access();
-        const string sql = "SELECT * FROM accounts WHERE Level1 = @Level1 AND Level2 = @Level2";
+        const string sql = "SELECT * FROM accounts WHERE Level1 = @Level1";
         List<Account> matches = await database.QueryAsync<Account, dynamic>(sql, new
         {
-            Level1 = level1Filter,
-            Level2 = level2Filter
+            Level1 = level1Filter
         });
 
-        return Ok(matches);
+        List<Account> filtered = matches.Where(account => account.Level2.Contains("\u001f" + level2Filter + "\u001f")).ToList();
+        return Ok(filtered);
     }
 }

@@ -6,11 +6,12 @@
     justify-content: center;
 }
 
-.centre {
+.centre-wrap {
     margin: auto;
     width: 80%;
     padding: 10px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 }
 
@@ -43,7 +44,7 @@
     color: #0b5ed7;
 }
 
-.box{
+.box {
     background: linear-gradient(to bottom, #f0f0f0 0%, #f0f0f0 100%);
     padding-top: 40px;
     margin-right: 300px;

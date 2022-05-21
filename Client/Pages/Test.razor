@@ -3,13 +3,18 @@
 
 <h3>Test</h3>
 
+<input @bind="_bind1"/>
+<input @bind="_bind2"/>
 <button @onclick="Get">Get matches</button>
 
 @code {
 
+    private string _bind1 = string.Empty;
+    private string _bind2 = string.Empty;
+
     private async void Get()
     {
-        await HttpClient.GetAsync($"AccountApi/FindUsers/{2}/{7}");
+        await HttpClient.GetAsync($"AccountApi/FindUsers/{int.Parse(_bind1)}/{int.Parse(_bind2)}");
     }
 
 }
