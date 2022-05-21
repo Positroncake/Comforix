@@ -2,6 +2,7 @@
 @using Comforix.Shared
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap" rel="stylesheet">
 
 <PageTitle>Index</PageTitle>
 
@@ -9,9 +10,9 @@
     <h1>Welcome to Comforix</h1>
 </div>
 <div class="centre">
-    <button @onclick="() => { Step1Selected(PhysicalOrEmotional.Physical); }">Physical</button>
-    <button @onclick="() => { Step1Selected(PhysicalOrEmotional.Emotional); }">Emotional</button>
-    <button @onclick="() => { Step1Selected(PhysicalOrEmotional.Both); }">Both</button>
+    <button class="button-design" @onclick="() => { Step1Selected(PhysicalOrEmotional.Physical); }">Physical</button>
+    <button class="button-design" @onclick="() => { Step1Selected(PhysicalOrEmotional.Emotional); }">Emotional</button>
+    <button class="button-design" @onclick="() => { Step1Selected(PhysicalOrEmotional.Both); }">Both</button>
 </div>
 
 @if (_showStep2 && _peSelection == PhysicalOrEmotional.Emotional || _peSelection == PhysicalOrEmotional.Both)
