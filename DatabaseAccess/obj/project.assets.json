@@ -880,19 +880,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\sharo\\.nuget\\packages\\": {}
+    "C:\\Users\\doris_9oqc75m\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\sharo\\RiderProjects\\Comforix\\DatabaseAccess\\DatabaseAccess.csproj",
+      "projectUniqueName": "C:\\Users\\doris_9oqc75m\\RiderProjects\\Comforix\\DatabaseAccess\\DatabaseAccess.csproj",
       "projectName": "DatabaseAccess",
-      "projectPath": "C:\\Users\\sharo\\RiderProjects\\Comforix\\DatabaseAccess\\DatabaseAccess.csproj",
-      "packagesPath": "C:\\Users\\sharo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\sharo\\RiderProjects\\Comforix\\DatabaseAccess\\obj\\",
+      "projectPath": "C:\\Users\\doris_9oqc75m\\RiderProjects\\Comforix\\DatabaseAccess\\DatabaseAccess.csproj",
+      "packagesPath": "C:\\Users\\doris_9oqc75m\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\doris_9oqc75m\\RiderProjects\\Comforix\\DatabaseAccess\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\sharo\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\doris_9oqc75m\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"

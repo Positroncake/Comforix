@@ -6,6 +6,15 @@
     justify-content: center;
 }
 
+.title {
+    margin: auto;
+    width: 60%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    font-family: Fredoka One;
+}
+
 .button-design {
     padding: 10px 20px 10px 20px;
     margin: 10px 10px 10px 10px;
@@ -13,4 +22,12 @@
     border-radius: 15%;
     box-shadow: 5px 10px #add8e6;
     
+}
+
+.button-design {
+    padding: 10px 20px 10px 20px;
+    margin: 10px 10px 10px 10px;
+    border-radius: 15%;
+    box-shadow: 5px 10px #add8e6;
+
 }
