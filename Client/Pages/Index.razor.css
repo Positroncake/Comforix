@@ -1,3 +1,4 @@
+
 .centre {
     margin: auto;
     width: 80%;
@@ -52,5 +53,13 @@
     box-shadow: 5px 10px #50A3BF;
     background-color: #ffffff;
     color: #0b5ed7;
+}
+
+.description{
+    font-family: Zen Maru Gothic, Medium;
+    color: #000000;
+    margin-top: 10px;
+    left: 150px;
+    
 }
 
