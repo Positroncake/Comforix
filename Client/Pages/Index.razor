@@ -1,62 +1,59 @@
 @page "/"
 @using Comforix.Shared
 
-
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" type="text/css">
 
 <PageTitle>Index</PageTitle>
-<style> 
-.center { 
-    color:#000000; 
-    margin-top: 2em;  
-    position: absolute; 
-    left: 580px; 
-    font-family: Fredoka One; 
-} 
-</style> 
 
-<h1 class="center" href="">Welcome to Comforix</h1>
-
-<button @onclick="() => { Step1Selected(PhysicalOrEmotional.Physical); }">Physical</button>
-<button @onclick="() => { Step1Selected(PhysicalOrEmotional.Emotional); }">Emotional</button>
-<button @onclick="() => { Step1Selected(PhysicalOrEmotional.Both); }">Both</button>
+<div class="centre">
+    <h1>Welcome to Comforix</h1>
+</div>
+<div class="centre">
+    <button @onclick="() => { Step1Selected(PhysicalOrEmotional.Physical); }">Physical</button>
+    <button @onclick="() => { Step1Selected(PhysicalOrEmotional.Emotional); }">Emotional</button>
+    <button @onclick="() => { Step1Selected(PhysicalOrEmotional.Both); }">Both</button>
+</div>
 
 @if (_showStep2 && _peSelection == PhysicalOrEmotional.Emotional || _peSelection == PhysicalOrEmotional.Both)
 {
-    <br/>
-    <br/>
-    <button @onclick="() => { Step2Selected(Issue.Depression); }">Depression</button>
-    <button @onclick="() => { Step2Selected(Issue.Anxiety); }">Anxiety</button>
-    <button @onclick="() => { Step2Selected(Issue.Ptsd); }">PTSD</button>
-    <button @onclick="() => { Step2Selected(Issue.Stress); }">Stress</button>
-    <button @onclick="() => { Step2Selected(Issue.SomethingElse); }">Something else</button>
-    <button @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
+    <div class="centre">
+        <br/>
+        <button @onclick="() => { Step2Selected(Issue.Depression); }">Depression</button>
+        <button @onclick="() => { Step2Selected(Issue.Anxiety); }">Anxiety</button>
+        <button @onclick="() => { Step2Selected(Issue.Ptsd); }">PTSD</button>
+        <button @onclick="() => { Step2Selected(Issue.Stress); }">Stress</button>
+        <button @onclick="() => { Step2Selected(Issue.SomethingElse); }">Something else</button>
+        <button @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
+    </div>
 }
 
 @if (_showStep2 && _peSelection == PhysicalOrEmotional.Physical || _peSelection == PhysicalOrEmotional.Both)
 {
-    <br/>
-    <br/>
-    <button @onclick="() => { Step2Selected(Issue.BrokenLeg); }">Broken leg</button>
-    <button @onclick="() => { Step2Selected(Issue.BrokenArm); }">Broken arm</button>
-    <button @onclick="() => { Step2Selected(Issue.Cancer); }">Cancer</button>
-    <button @onclick="() => { Step2Selected(Issue.SomethingElse); }">Something else</button>
-    <button @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
+    <div class="centre">
+        <br/>
+        <button @onclick="() => { Step2Selected(Issue.BrokenLeg); }">Broken leg</button>
+        <button @onclick="() => { Step2Selected(Issue.BrokenArm); }">Broken arm</button>
+        <button @onclick="() => { Step2Selected(Issue.Cancer); }">Cancer</button>
+        <button @onclick="() => { Step2Selected(Issue.SomethingElse); }">Something else</button>
+        <button @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
+    </div>
 }
 
 @if (_showStep3)
 {
-    <br/>
-    <br/>
-    <input @bind="_message"/>
-    <button @onclick="Step3Selected">Proceed</button>
+    <div class="centre">
+        <br/>
+        <input @bind="_message"/>
+        <button @onclick="Step3Selected">Proceed</button>
+    </div>
 }
 
 @if (_showStep4)
 {
-    <br/>
-    <br/>
-    <p>Registration/Login stuff!</p>
+    <div class="centre">
+        <br/>
+        <p>Registration/Login stuff!</p>
+    </div>
 }
 
 @code {
@@ -69,17 +66,17 @@
     private void Step1Selected(PhysicalOrEmotional selection)
     {
         _peSelection = selection;
-        Console.WriteLine((int) selection);
+        Console.WriteLine((int)selection);
         _showStep2 = true;
     }
 
     private void Step2Selected(Issue selection)
     {
         _issue = selection;
-        Console.WriteLine((int) selection);
+        Console.WriteLine((int)selection);
         _showStep3 = true;
     }
-    
+
     private void Step3Selected()
     {
         _showStep4 = true;

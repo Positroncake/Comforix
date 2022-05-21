@@ -1,0 +1,7 @@
+.centre {
+    margin: auto;
+    width: 60%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}

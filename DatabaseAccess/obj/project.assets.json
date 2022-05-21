@@ -880,19 +880,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\doris_9oqc75m\\.nuget\\packages\\": {}
+    "/home/roncake/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\doris_9oqc75m\\RiderProjects\\Comforix\\DatabaseAccess\\DatabaseAccess.csproj",
+      "projectUniqueName": "/home/roncake/RiderProjects/Comforix/DatabaseAccess/DatabaseAccess.csproj",
       "projectName": "DatabaseAccess",
-      "projectPath": "C:\\Users\\doris_9oqc75m\\RiderProjects\\Comforix\\DatabaseAccess\\DatabaseAccess.csproj",
-      "packagesPath": "C:\\Users\\doris_9oqc75m\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\doris_9oqc75m\\RiderProjects\\Comforix\\DatabaseAccess\\obj\\",
+      "projectPath": "/home/roncake/RiderProjects/Comforix/DatabaseAccess/DatabaseAccess.csproj",
+      "packagesPath": "/home/roncake/.nuget/packages/",
+      "outputPath": "/home/roncake/RiderProjects/Comforix/DatabaseAccess/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\doris_9oqc75m\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/home/roncake/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -935,12 +935,18 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[7.0.0-preview.4.22251.1, 7.0.0-preview.4.22251.1]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100-preview.4.22252.9\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/7.0.100-preview.4.22252.9/RuntimeIdentifierGraph.json"
       }
     }
   }
