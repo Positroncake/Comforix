@@ -12,8 +12,6 @@ namespace Comforix.Server.Controllers;
 [Route("AccountApi")]
 public class AccountController : ControllerBase
 {
-    private readonly string ConnectionString = "Server=127.0.0.1;Port=3306;Database=comforix;Uid=comforix_db;Pwd=aKrL72CMwomSkoMzvufz3CfmuUzuWT5o";
-
     [HttpPost]
     [Route("New")]
     public async Task<ActionResult> NewAcc([FromBody] Account account)
@@ -75,7 +73,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet]
-    [Route("FindUsers/{level1Filter}/{level2Filter}")]
+    [Route("FindUsers/{level1Filter:int}/{level2Filter:int}")]
     public async Task<ActionResult> FindUsersWithFilter(int level1Filter, int level2Filter)
     {
         IAccess database = new Access();
@@ -86,6 +84,6 @@ public class AccountController : ControllerBase
             Level2 = level2Filter
         });
 
-        return Ok();
+        return Ok(matches);
     }
 }

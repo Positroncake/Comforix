@@ -1,5 +1,11 @@
 @page "/"
 @using Comforix.Shared
+@using System.Security.Cryptography
+@using System.Text
+@using System.Net
+@using Blazored.LocalStorage
+@inject HttpClient HttpClient
+@inject ILocalStorageService LocalStorage
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap" rel="stylesheet">
@@ -16,33 +22,49 @@
     <button class="button-design" @onclick="() => { Step1Selected(PhysicalOrEmotional.Both); }">Both</button>
 </div>
 
-@if (_showStep2 && _peSelection == PhysicalOrEmotional.Emotional || _peSelection == PhysicalOrEmotional.Both)
-{
-    <div class="centre">
-        <br/>
-        <button class="button-design-dark" @onclick="() => { Step2Selected(Issue.Depression); }">Depression</button>
-        <button class="button-design-dark" @onclick="() => { Step2Selected(Issue.Anxiety); }">Anxiety</button>
-        <button class="button-design-dark" @onclick="() => { Step2Selected(Issue.Ptsd); }">PTSD</button>
-        <button class="button-design-dark" @onclick="() => { Step2Selected(Issue.Stress); }">Stress</button>
-    </div>
-}
-
-@if (_showStep2 && _peSelection == PhysicalOrEmotional.Physical || _peSelection == PhysicalOrEmotional.Both)
-{
-    <div class="centre">
-        <br/>
-        <button class="button-design-dark" @onclick="() => { Step2Selected(Issue.BrokenLeg); }">Broken leg</button>
-        <button class="button-design-dark" @onclick="() => { Step2Selected(Issue.BrokenArm); }">Broken arm</button>
-        <button class="button-design-dark" @onclick="() => { Step2Selected(Issue.Cancer); }">Cancer</button>
-    </div>
-}
-
 @if (_showStep2)
 {
     <div class="centre">
         <br/>
-        <button class="button-design-dark" @onclick="() => { Step2Selected(Issue.SomethingElse); }">Something else</button>
-        <button class="button-design-dark" @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
+        @if (_buttonsP.Count is not 0)
+        {
+            for (var i = 0; i < _buttonsP.Count; ++i)
+            {
+                int index = i;
+                <button class="button-design-dark" style="color: @(_buttonsP[index].Selected ? "#0066cc" : "#ffffff")" @onclick="() => { Step2Selected(_buttonsP[index].PhysicalIssue, index); }">@string.Join(' ', _buttonsP[index].PhysicalIssue.ToString().Split('_'))</button>
+                if (i % 6 is 0 && i is not 0)
+                {
+                    <br/>
+                    <br/>
+                }
+            }
+        }
+        @if (_buttonsE.Count is not 0)
+        {
+            for (var i = 0; i < _buttonsE.Count; ++i)
+            {
+                int index = i;
+                <button class="button-design-dark" style="color: @(_buttonsE[index].Selected ? "#0066cc" : "#ffffff")" @onclick="() => { Step2Selected(_buttonsE[index].EmotionalIssue, index); }">@string.Join(' ', _buttonsE[index].EmotionalIssue.ToString().Split('_'))</button>
+                if (i % 6 is 0 && i is not 0)
+                {
+                    <br/>
+                    <br/>
+                }
+            }
+        }
+        @if (_buttonsB.Count is not 0)
+        {
+            for (var i = 0; i < _buttonsB.Count; ++i)
+            {
+                int index = i;
+                <button class="button-design-dark" style="color: @(_buttonsB[index].Selected ? "#0066cc" : "#ffffff")" @onclick="() => { Step2Selected(_buttonsB[index].Issue, index); }">@string.Join(' ', _buttonsB[index].Issue.ToString().Split('_'))</button>
+                if (i % 6 is 0 && i is not 0)
+                {
+                    <br/>
+                    <br/>
+                }
+            }
+        }
     </div>
 }
 
@@ -50,7 +72,7 @@
 {
     <div class="centre">
         <br/>
-        <input @bind="_message"/>
+        <input @bind="_description"/>
         <button @onclick="Step3Selected">Proceed</button>
     </div>
 }
@@ -59,28 +81,117 @@
 {
     <div class="centre">
         <br/>
-        <p>Registration/Login stuff!</p>
+        <p>Register:</p>
+        <input @bind="_uname"/>
+        <input @bind="_pwd"/>
+        <button @onclick="SendToServer">Register!</button>
     </div>
+}
+
+@if (_showSalting)
+{
+    <p>Processing...</p>
+}
+@if (_showSending)
+{
+    <p>Registering...</p>
+}
+@if (_showComplete)
+{
+    <p>Registered!</p>
+}
+@if (_showError)
+{
+    <p>Error: One or more fields are empty.</p>
+}
+@if (_showDatabaseConnectionError)
+{
+    <p>Error: Server could not connect with database. Please try again.</p>
 }
 
 @code {
 
-    PhysicalOrEmotional _peSelection;
-    Issue _issue;
+    #region Buttons (UI)
+
+    private class ButtonP // P = physical
+    {
+        public PhysicalIssue PhysicalIssue { get; set; }
+        public bool Selected { get; set; }
+    }
+
+    private class ButtonE // E = emotional
+    {
+        public EmotionalIssue EmotionalIssue { get; set; }
+        public bool Selected { get; set; }
+    }
+
+    private class ButtonB // B = both
+    {
+        public Issue Issue { get; set; }
+        public bool Selected { get; set; }
+    }
+
+    List<ButtonP> _buttonsP = new();
+    List<ButtonE> _buttonsE = new();
+    List<ButtonB> _buttonsB = new();
+
+    #endregion
+
+    #region Gather info
+
+    private byte _peSelection;
+    private ushort _issue;
     private bool _showStep2, _showStep3, _showStep4;
-    private string _message;
+    private string _description = string.Empty;
 
     private void Step1Selected(PhysicalOrEmotional selection)
     {
-        _peSelection = selection;
-        Console.WriteLine((int)selection);
+        _buttonsP = new List<ButtonP>();
+        _buttonsE = new List<ButtonE>();
+        _buttonsB = new List<ButtonB>();
+
+        switch (selection)
+        {
+            case PhysicalOrEmotional.Physical:
+            {
+                foreach (int i in Enum.GetValues(typeof(PhysicalIssue))) _buttonsP.Add(new ButtonP { PhysicalIssue = (PhysicalIssue)i, Selected = false });
+                break;
+            }
+            case PhysicalOrEmotional.Emotional:
+            {
+                foreach (int i in Enum.GetValues(typeof(EmotionalIssue))) _buttonsE.Add(new ButtonE { EmotionalIssue = (EmotionalIssue)i, Selected = false });
+                break;
+            }
+            case PhysicalOrEmotional.Both:
+            {
+                foreach (int i in Enum.GetValues(typeof(Issue))) _buttonsB.Add(new ButtonB { Issue = (Issue)i, Selected = false });
+                break;
+            }
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+        _peSelection = (byte)selection;
         _showStep2 = true;
     }
 
-    private void Step2Selected(Issue selection)
+    private void Step2Selected(PhysicalIssue selection, int listIndex)
     {
-        _issue = selection;
-        Console.WriteLine((int)selection);
+        _buttonsP[listIndex].Selected = true;
+        _issue = (ushort)selection;
+        _showStep3 = true;
+    }
+
+    private void Step2Selected(EmotionalIssue selection, int listIndex)
+    {
+        _buttonsE[listIndex].Selected = true;
+        _issue = (ushort)selection;
+        _showStep3 = true;
+    }
+
+    private void Step2Selected(Issue selection, int listIndex)
+    {
+        _buttonsB[listIndex].Selected = true;
+        _issue = (ushort)selection;
         _showStep3 = true;
     }
 
@@ -89,5 +200,109 @@
         _showStep4 = true;
     }
 
-}
+    #endregion
 
+    #region Login/register
+
+    private string? _uname, _pwd;
+    private bool _showSalting, _showSending, _showComplete, _showError, _showDatabaseConnectionError;
+    private static byte[] _hash = null!;
+    private static readonly SHA512 Sha512 = SHA512.Create();
+
+    private async void SendToServer()
+    {
+        _showSalting = false;
+        _showSending = false;
+        _showComplete = false;
+        _showError = false;
+        _showDatabaseConnectionError = false;
+
+        if (string.IsNullOrEmpty(_uname) || string.IsNullOrEmpty(_pwd))
+        {
+            _showError = true;
+            return;
+        }
+
+        _showSalting = true;
+        byte[] pwd = Encoding.UTF32.GetBytes(_pwd); // Convert password to byte array
+        byte[] salt = GenerateSalt(); // Create salt byte array
+        _hash = pwd.Concat(salt).ToArray(); // Combine password byte array and salt byte array
+        await ComputeSaltedHash(); // Hash (SHA-512)
+
+        _showSending = true;
+        StateHasChanged();
+        var registrationRequest = new Account
+        {
+            Username = _uname,
+            PasswordHash = _hash,
+            PasswordSalt = salt,
+            Level1 = _peSelection,
+            Level2 = _issue,
+            Level3 = _description
+        };
+
+    // Send to server
+        HttpResponseMessage response = await HttpClient.PostAsJsonAsync("AccountApi/New", registrationRequest);
+    // Bug: Database fails to connect on the first try. This is a known bug with the MySql.Data NuGet package. Re-sending the request fixes it.
+        if (response.StatusCode is HttpStatusCode.InternalServerError) response = await HttpClient.PostAsJsonAsync("AccountApi/New", registrationRequest);
+
+    // In case of database error
+        if (response.IsSuccessStatusCode is false)
+        {
+            _showDatabaseConnectionError = true;
+            StateHasChanged();
+        }
+
+    // Save to local storage
+        string token = (await response.Content.ReadAsStringAsync()).ToLowerInvariant();
+        await LocalStorage.SetItemAsStringAsync("token", token);
+
+    // Complete!
+        _showComplete = true;
+        StateHasChanged();
+    }
+
+    private static byte[] GenerateSalt()
+    {
+        var salt = new byte[128];
+        var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(salt);
+        return salt;
+    }
+
+    private readonly Resource _resource = new();
+    private readonly CancellationTokenSource _cts = new();
+
+    private async Task ComputeSaltedHash()
+    {
+        await Task.Delay(100, _cts.Token);
+        _cts.Token.ThrowIfCancellationRequested();
+        _resource.Compute();
+    }
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _resource.Dispose();
+    }
+
+    private class Resource : IDisposable
+    {
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed) throw new ObjectDisposedException(nameof(Resource));
+            _disposed = true;
+        }
+
+        public void Compute()
+        {
+            if (_disposed) throw new ObjectDisposedException(nameof(Resource));
+            for (var i = 0; i < 5000; ++i) _hash = Sha512.ComputeHash(_hash);
+        }
+    }
+
+    #endregion
+
+}

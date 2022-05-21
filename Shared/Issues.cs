@@ -1,3 +1,4 @@
+// ReSharper disable InconsistentNaming
 namespace Comforix.Shared;
 
 public enum PhysicalOrEmotional
@@ -7,15 +8,34 @@ public enum PhysicalOrEmotional
     Both = 2
 }
 
+public enum PhysicalIssue
+{
+    Broken_Leg = 0,
+    Broken_Arm = 1,
+    Cancer = 2,
+    Something_Else = 65534,
+    Prefer_Not_To_Say = 65535
+}
+
+public enum EmotionalIssue
+{
+    Depression = 0,
+    Anxiety = 1,
+    PTSD = 2,
+    Stress = 3,
+    Something_Else = 65534,
+    Prefer_Not_To_Say = 65535
+}
+
 public enum Issue
 {
-    PreferNotToSay = 0,
-    Depression = 1,
-    Anxiety = 2,
-    Ptsd = 3,
-    Stress = 4,
-    BrokenLeg = 5,
-    BrokenArm = 6,
-    Cancer = 7,
-    SomethingElse = 8
+    Depression = 0,
+    Anxiety = 1,
+    PTSD = 2,
+    Stress = 3,
+    Broken_Leg = 4,
+    Broken_Arm = 5,
+    Cancer = 6,
+    Something_Else = 65534,
+    Prefer_Not_To_Say = 65535
 }

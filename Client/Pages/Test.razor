@@ -1,0 +1,15 @@
+@page "/Test"
+@inject HttpClient HttpClient
+
+<h3>Test</h3>
+
+<button @onclick="Get">Get matches</button>
+
+@code {
+
+    private async void Get()
+    {
+        await HttpClient.GetAsync($"AccountApi/FindUsers/{2}/{7}");
+    }
+
+}
