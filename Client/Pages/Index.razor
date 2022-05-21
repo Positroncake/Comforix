@@ -7,11 +7,11 @@
 <PageTitle>Index</PageTitle>
 <style> 
 .center { 
-color:#000000; 
-margin-top: 2em;  
-position: absolute; 
-left: 580px; 
-font-family: Fredoka One; 
+    color:#000000; 
+    margin-top: 2em;  
+    position: absolute; 
+    left: 580px; 
+    font-family: Fredoka One; 
 } 
 </style> 
 
@@ -21,7 +21,7 @@ font-family: Fredoka One;
 <button @onclick="() => { Step1Selected(PhysicalOrEmotional.Emotional); }">Emotional</button>
 <button @onclick="() => { Step1Selected(PhysicalOrEmotional.Both); }">Both</button>
 
-@if (_showStep2 && _peSelection == PhysicalOrEmotional.Emotional)
+@if (_showStep2 && _peSelection == PhysicalOrEmotional.Emotional || _peSelection == PhysicalOrEmotional.Both)
 {
     <br/>
     <br/>
@@ -33,7 +33,7 @@ font-family: Fredoka One;
     <button @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
 }
 
-@if (_showStep2 && _peSelection == PhysicalOrEmotional.Physical)
+@if (_showStep2 && _peSelection == PhysicalOrEmotional.Physical || _peSelection == PhysicalOrEmotional.Both)
 {
     <br/>
     <br/>
