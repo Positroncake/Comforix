@@ -26,4 +26,9 @@ public static class TokenUtils
 
         return token;
     }
+
+    public static async Task<string> ValidateToken(string token)
+    {
+        return string.Empty;
+    }
 }
