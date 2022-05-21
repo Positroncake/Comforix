@@ -65,57 +65,55 @@
 input {
   width: 10%;
     margin: 8px 0;
-    box-sizing: border-box;
-    
+    box-sizing: border-box;   
 }
 
 </style>
 @if (_showStep4)
 {
-    
     <div class="text-center pt-md-5">
         <h2 class="text-center mb-5">Register</h2>
         <div class="d-flex flex-row justify-content-center">
             <div style="color: #000000" class="form-box">
-                
-                    <label for="signup-username">Username</label>
-                    <input style="width: 200px"type="text"id="signup-username"/><br/><br/>
-                    <label for="signup-password">Password</label>
-                    <input style="width: 200px"type="password" id="signup-password"/><br/><br/>
-                    
-                
-                    <label for="signup-display">Confirm Password</label>
-                    <input style="width: 200px"type="password" id="signup-display"/><br/><br/>
-                    
-                   
-                
-
-                <button  class="button-design">Register!</button>
+                <label for="signup-username">Username</label>
+                <input style="width: 200px" type="text" id="signup-username" @bind="_uname"/><br/><br/>
+                <label for="signup-password">Password</label>
+                <input style="width: 200px" type="password" id="signup-password" @bind="_pwd"/><br/><br/>
+                <label for="signup-password-conf">Confirm Password</label>
+                <input style="width: 200px" type="password" id="signup-password-conf" @bind="_pwdConf"/><br/><br/>
+                <button class="button-design" @onclick="SendToServer">Register!</button>
             </div>
         </div>
     </div>
-
 }
 
 @if (_showSalting)
 {
-    <p>Processing...</p>
+    <p class="centre">Processing...</p>
 }
 @if (_showSending)
 {
-    <p>Registering...</p>
+    <p class="centre">Registering...</p>
 }
 @if (_showComplete)
 {
-    <p>Registered!</p>
+    <p class="centre">Registered!</p>
 }
 @if (_showError)
 {
-    <p>Error: One or more fields are empty.</p>
+    <p class="centre">Error: One or more fields are empty.</p>
+}
+@if (_showPasswordMismatchError)
+{
+    <p class="centre">Error: Passwords do not match.</p>
 }
 @if (_showDatabaseConnectionError)
 {
-    <p>Error: Server could not connect with database. Please try again.</p>
+    <p class="centre">Error: Server could not connect with database. Please try again.</p>
+}
+@if (_showUsernameTakenError)
+{
+    <p class="centre">Error: Username taken.</p>
 }
 
 @code {
@@ -242,8 +240,8 @@ input {
 
     #region Login/register
 
-    private string? _uname, _pwd;
-    private bool _showSalting, _showSending, _showComplete, _showError, _showDatabaseConnectionError;
+    private string? _uname, _pwd, _pwdConf;
+    private bool _showSalting, _showSending, _showComplete, _showError, _showPasswordMismatchError, _showUsernameTakenError, _showDatabaseConnectionError;
     private static byte[] _hash = null!;
     private static readonly SHA512 Sha512 = SHA512.Create();
 
@@ -253,11 +251,21 @@ input {
         _showSending = false;
         _showComplete = false;
         _showError = false;
+        _showPasswordMismatchError = false;
+        _showUsernameTakenError = false;
         _showDatabaseConnectionError = false;
 
-        if (string.IsNullOrEmpty(_uname) || string.IsNullOrEmpty(_pwd))
+    // Check for empty fields
+        if (string.IsNullOrEmpty(_uname) || string.IsNullOrEmpty(_pwd) || string.IsNullOrEmpty(_pwdConf))
         {
             _showError = true;
+            return;
+        }
+
+    // Check for password mismatch
+        if (_pwd.Equals(_pwdConf) is false)
+        {
+            _showPasswordMismatchError = true;
             return;
         }
 
@@ -285,10 +293,20 @@ input {
         if (response.StatusCode is HttpStatusCode.InternalServerError) response = await HttpClient.PostAsJsonAsync("AccountApi/New", registrationRequest);
 
     // In case of database error
-        if (response.IsSuccessStatusCode is false)
+    // ReSharper disable once ConvertIfStatementToSwitchStatement
+        if (response.StatusCode is HttpStatusCode.InternalServerError)
         {
             _showDatabaseConnectionError = true;
             StateHasChanged();
+            return;
+        }
+
+    // In case of taken username
+        if (response.StatusCode is HttpStatusCode.Conflict)
+        {
+            _showUsernameTakenError = true;
+            StateHasChanged();
+            return;
         }
 
     // Save to local storage
