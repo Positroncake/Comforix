@@ -31,12 +31,7 @@
             for (var i = 0; i < _buttonsP.Count; ++i)
             {
                 int index = i;
-                <button class="button-design-dark" style="color: @(_buttonsP[index].Selected ? "#ffffff" : "#000000"); background-color: @(_buttonsP[index].Selected ? "#0c63e4" : "#ffffff")" @onclick="() => { Step2Selected(_buttonsP[index].PhysicalIssue, index); }">@string.Join(' ', _buttonsP[index].PhysicalIssue.ToString().Split('_'))</button>
-                if (i % 6 is 0 && i is not 0)
-                {
-                    <br/>
-                    <br/>
-                }
+                <button class="button-design-dark" style="color: @(_buttonsP[index].Selected ? "#ffffff" : "#000000"); background-color: @(_buttonsP[index].Selected ? "#0c63e4" : "#ffffff")" @onclick="() => { Step2Clicked(_buttonsP[index].PhysicalIssue, index); }">@string.Join(' ', _buttonsP[index].PhysicalIssue.ToString().Split('_'))</button>
             }
         }
         @if (_buttonsE.Count is not 0)
@@ -44,12 +39,7 @@
             for (var i = 0; i < _buttonsE.Count; ++i)
             {
                 int index = i;
-                <button class="button-design-dark" style="color: @(_buttonsE[index].Selected ? "#ffffff" : "#000000"); background-color: @(_buttonsE[index].Selected ? "#0c63e4" : "#ffffff")" @onclick="() => { Step2Selected(_buttonsE[index].EmotionalIssue, index); }">@string.Join(' ', _buttonsE[index].EmotionalIssue.ToString().Split('_'))</button>
-                if (i % 6 is 0 && i is not 0)
-                {
-                    <br/>
-                    <br/>
-                }
+                <button class="button-design-dark" style="color: @(_buttonsE[index].Selected ? "#ffffff" : "#000000"); background-color: @(_buttonsE[index].Selected ? "#0c63e4" : "#ffffff")" @onclick="() => { Step2Clicked(_buttonsE[index].EmotionalIssue, index); }">@string.Join(' ', _buttonsE[index].EmotionalIssue.ToString().Split('_'))</button>
             }
         }
         @if (_buttonsB.Count is not 0)
@@ -57,12 +47,7 @@
             for (var i = 0; i < _buttonsB.Count; ++i)
             {
                 int index = i;
-                <button class="button-design-dark" style="color: @(_buttonsB[index].Selected ? "#ffffff" : "#000000"); background-color: @(_buttonsB[index].Selected ? "#0c63e4" : "#ffffff")" @onclick="() => { Step2Selected(_buttonsB[index].Issue, index); }">@string.Join(' ', _buttonsB[index].Issue.ToString().Split('_'))</button>
-                if (i % 6 is 0 && i is not 0)
-                {
-                    <br/>
-                    <br/>
-                }
+                <button class="button-design-dark" style="color: @(_buttonsB[index].Selected ? "#ffffff" : "#000000"); background-color: @(_buttonsB[index].Selected ? "#0c63e4" : "#ffffff")" @onclick="() => { Step2Clicked(_buttonsB[index].Issue, index); }">@string.Join(' ', _buttonsB[index].Issue.ToString().Split('_'))</button>
             }
         }
     </div>
@@ -174,25 +159,52 @@
         _showStep2 = true;
     }
 
-    private void Step2Selected(PhysicalIssue selection, int listIndex)
+    private void Step2Clicked(PhysicalIssue selection, int listIndex)
     {
-        _buttonsP[listIndex].Selected = true;
-        _issue = (ushort)selection;
-        _showStep3 = true;
+        if (_buttonsP[listIndex].Selected is false)
+        {
+            _buttonsP[listIndex].Selected = true;
+    //Todo: Add issue to list
+            _showStep3 = true;
+        }
+        else
+        {
+            _buttonsP[listIndex].Selected = false;
+    // Todo: Remove from issue list
+            _showStep3 = true;
+        }
     }
 
-    private void Step2Selected(EmotionalIssue selection, int listIndex)
+    private void Step2Clicked(EmotionalIssue selection, int listIndex)
     {
-        _buttonsE[listIndex].Selected = true;
-        _issue = (ushort)selection;
-        _showStep3 = true;
+        if (_buttonsE[listIndex].Selected is false)
+        {
+            _buttonsE[listIndex].Selected = true;
+    //Todo: Add issue to list
+            _showStep3 = true;
+        }
+        else
+        {
+            _buttonsE[listIndex].Selected = false;
+    // Todo: Remove from issue list
+            _showStep3 = true;
+        }
     }
 
-    private void Step2Selected(Issue selection, int listIndex)
+    private void Step2Clicked(Issue selection, int listIndex)
     {
-        _buttonsB[listIndex].Selected = true;
-        _issue = (ushort)selection;
-        _showStep3 = true;
+        if (_buttonsB[listIndex].Selected is false)
+        {
+            _buttonsB[listIndex].Selected = true;
+    //Todo: Add issue to list
+            _showStep3 = true;
+        }
+        else
+        {
+            _buttonsB[listIndex].Selected = false;
+    // Todo: Remove from issue list
+            _showStep3 = true;
+        }
     }
 
     private void Step3Selected()
