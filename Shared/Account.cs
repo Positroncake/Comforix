@@ -1,3 +1,5 @@
+using Comforix.Shared;
+
 namespace ayayay.Shared;
 
 public class Account

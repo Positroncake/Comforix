@@ -4,6 +4,7 @@
 @using ayayay.Shared
 @using Blazored.LocalStorage
 @using System.Net
+@using Comforix.Shared
 @inject ILocalStorageService LocalStorage
 @inject HttpClient HttpClient
 
@@ -67,7 +68,7 @@
             Username = _uname,
             PasswordHash = _hash,
             PasswordSalt = salt,
-            Level1 = PhysicalOrEmotional.PreferNotToSay,
+            Level1 = PhysicalOrEmotional.Both,
             Level2 = Issue.PreferNotToSay,
             Level3 = null
         };

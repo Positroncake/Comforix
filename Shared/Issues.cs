@@ -1,20 +1,21 @@
-namespace ayayay.Shared;
+namespace Comforix.Shared;
 
 public enum PhysicalOrEmotional
 {
-    PreferNotToSay = 0,
-    Physical = 1,
-    Emotional = 2,
-    Both = 3
+    Physical = 0,
+    Emotional = 1,
+    Both = 2
 }
 
 public enum Issue
 {
     PreferNotToSay = 0,
-    Placeholder = 1,
-    Text = 2,
-    RandomStuff = 3,
-    Depression = 4,
-    SomethingElse = 5,
-    AnotherIssue = 6
+    Depression = 1,
+    Anxiety = 2,
+    Ptsd = 3,
+    Stress = 4,
+    BrokenLeg = 5,
+    BrokenArm = 6,
+    Cancer = 7,
+    SomethingElse = 8
 }

@@ -1,9 +1,86 @@
 ﻿@page "/"
+@using Comforix.Shared
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+@* <style> *@
+@* .center { *@
+@*     color:#000000; *@
+@*     margin-top: 2em;  *@
+@*     position: absolute; *@
+@*     left: 580px; *@
+@*     font-family: Lobster; *@
+@* } *@
+@* </style> *@
 
-Welcome to your new app.
+<h1 class="center" href="">Welcome to Comforix</h1>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<button @onclick="() => { Step1Selected(PhysicalOrEmotional.Physical); }">Physical</button>
+<button @onclick="() => { Step1Selected(PhysicalOrEmotional.Emotional); }">Emotional</button>
+<button @onclick="() => { Step1Selected(PhysicalOrEmotional.Both); }">Both</button>
+
+@if (_showStep2 && _peSelection == PhysicalOrEmotional.Emotional)
+{
+    <br/>
+    <br/>
+    <button @onclick="() => { Step2Selected(Issue.Depression); }">Depression</button>
+    <button @onclick="() => { Step2Selected(Issue.Anxiety); }">Anxiety</button>
+    <button @onclick="() => { Step2Selected(Issue.Ptsd); }">PTSD</button>
+    <button @onclick="() => { Step2Selected(Issue.Stress); }">Stress</button>
+    <button @onclick="() => { Step2Selected(Issue.SomethingElse); }">Something else</button>
+    <button @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
+}
+
+@if (_showStep2 && _peSelection == PhysicalOrEmotional.Physical)
+{
+    <br/>
+    <br/>
+    <button @onclick="() => { Step2Selected(Issue.BrokenLeg); }">Broken leg</button>
+    <button @onclick="() => { Step2Selected(Issue.BrokenArm); }">Broken arm</button>
+    <button @onclick="() => { Step2Selected(Issue.Cancer); }">Cancer</button>
+    <button @onclick="() => { Step2Selected(Issue.SomethingElse); }">Something else</button>
+    <button @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
+}
+
+@if (_showStep3)
+{
+    <br/>
+    <br/>
+    <input @bind="_message"/>
+    <button @onclick="Step3Selected">Proceed</button>
+}
+
+@if (_showStep4)
+{
+    <br/>
+    <br/>
+    <p>Registration/Login stuff!</p>
+}
+
+@code {
+
+    PhysicalOrEmotional _peSelection;
+    Issue _issue;
+    private bool _showStep2, _showStep3, _showStep4;
+    private string _message;
+
+    private void Step1Selected(PhysicalOrEmotional selection)
+    {
+        _peSelection = selection;
+        Console.WriteLine((int) selection);
+        _showStep2 = true;
+    }
+
+    private void Step2Selected(Issue selection)
+    {
+        _issue = selection;
+        Console.WriteLine((int) selection);
+        _showStep3 = true;
+    }
+    
+    private void Step3Selected()
+    {
+        _showStep4 = true;
+    }
+
+}
