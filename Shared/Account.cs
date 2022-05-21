@@ -1,3 +1,5 @@
+using System;
+
 namespace Comforix.Shared;
 
 public class Account
