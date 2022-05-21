@@ -1,0 +1,5 @@
+.div-wrap {
+    display: inline-block;
+    border: 2px dashed #0066cc;
+    padding: 10px;
+}
