@@ -5,6 +5,8 @@ Server/bin
 Server/obj
 Shared/bin
 Shared/obj
+DatabaseAccess/bin
+DatabaseAccess/obj
 # Server files
 *.db-*
 mono_crash.*.json
