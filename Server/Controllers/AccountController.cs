@@ -1,5 +1,4 @@
 using System.Security.Cryptography;
-using ayayay.Shared;
 using Comforix.Shared;
 using DatabaseAccess;
 using Microsoft.AspNetCore.Mvc;
