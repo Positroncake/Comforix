@@ -20,12 +20,10 @@
 {
     <div class="centre">
         <br/>
-        <button @onclick="() => { Step2Selected(Issue.Depression); }">Depression</button>
-        <button @onclick="() => { Step2Selected(Issue.Anxiety); }">Anxiety</button>
-        <button @onclick="() => { Step2Selected(Issue.Ptsd); }">PTSD</button>
-        <button @onclick="() => { Step2Selected(Issue.Stress); }">Stress</button>
-        <button @onclick="() => { Step2Selected(Issue.SomethingElse); }">Something else</button>
-        <button @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
+        <button class="button-design" @onclick="() => { Step2Selected(Issue.Depression); }">Depression</button>
+        <button class="button-design" @onclick="() => { Step2Selected(Issue.Anxiety); }">Anxiety</button>
+        <button class="button-design" @onclick="() => { Step2Selected(Issue.Ptsd); }">PTSD</button>
+        <button class="button-design" @onclick="() => { Step2Selected(Issue.Stress); }">Stress</button>
     </div>
 }
 
@@ -33,11 +31,18 @@
 {
     <div class="centre">
         <br/>
-        <button @onclick="() => { Step2Selected(Issue.BrokenLeg); }">Broken leg</button>
-        <button @onclick="() => { Step2Selected(Issue.BrokenArm); }">Broken arm</button>
-        <button @onclick="() => { Step2Selected(Issue.Cancer); }">Cancer</button>
-        <button @onclick="() => { Step2Selected(Issue.SomethingElse); }">Something else</button>
-        <button @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
+        <button class="button-design" @onclick="() => { Step2Selected(Issue.BrokenLeg); }">Broken leg</button>
+        <button class="button-design" @onclick="() => { Step2Selected(Issue.BrokenArm); }">Broken arm</button>
+        <button class="button-design" @onclick="() => { Step2Selected(Issue.Cancer); }">Cancer</button>
+    </div>
+}
+
+@if (_showStep2)
+{
+    <div class="centre">
+        <br/>
+        <button class="button-design" @onclick="() => { Step2Selected(Issue.SomethingElse); }">Something else</button>
+        <button class="button-design" @onclick="() => { Step2Selected(Issue.PreferNotToSay); }">Prefer not to say</button>
     </div>
 }
 
@@ -85,3 +90,4 @@
     }
 
 }
+
