@@ -31,3 +31,11 @@
     box-shadow: 5px 10px #50A3BF;
     
 }
+.box{
+    background: linear-gradient(to bottom, #f0f0f0 0%, #f0f0f0 100%);
+    padding-top: 40px;
+    margin-right: 300px;
+    padding-bottom: 500px;
+    margin-left: 300px;
+    
+}
