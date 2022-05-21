@@ -8,7 +8,7 @@ namespace Comforix.Server.Controllers;
 [Route("AccountApi")]
 public class AccountController : ControllerBase
 {
-    private readonly string ConnectionString = "Server=127.0.0.1;Port=3306;Database=comfortix;Uid=comfortix_db;Pwd=aKrL72CMwomSkoMzvufz3CfmuUzuWT5o";
+    private readonly string ConnectionString = "Server=127.0.0.1;Port=3306;Database=comforix;Uid=comforix_db;Pwd=aKrL72CMwomSkoMzvufz3CfmuUzuWT5o";
 
     [HttpPost]
     [Route("New")]

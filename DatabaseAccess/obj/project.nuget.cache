@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3juZHT+J7x51IbZgkM6wixGcs659drb1IznXeWWa2d1yHn/Pi3x6Ik3qCMF45ecqrkV2vTpIuJEZr6F3ZkrIwQ==",
+  "dgSpecHash": "R0fF51nJup4Exh9aJ4HO8hGnthq+yaQiWRj4SJar20UORH7GHg95IYrskT79uNeXkTKi17kxnb6kUKD8isPqKg==",
   "success": true,
-  "projectFilePath": "/home/roncake/RiderProjects/Comfortix/DatabaseAccess/DatabaseAccess.csproj",
+  "projectFilePath": "/home/roncake/RiderProjects/Comforix/DatabaseAccess/DatabaseAccess.csproj",
   "expectedPackageFiles": [
     "/home/roncake/.nuget/packages/bouncycastle.netcore/1.8.5/bouncycastle.netcore.1.8.5.nupkg.sha512",
     "/home/roncake/.nuget/packages/dapper/2.0.123/dapper.2.0.123.nupkg.sha512",
