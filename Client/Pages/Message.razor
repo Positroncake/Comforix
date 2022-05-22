@@ -1,21 +1,17 @@
 @page "/Message"
 @page "/Message/{UserId}"
-@using Comforix.Shared
-@using System.Net
 @inject HttpClient HttpClient
-<style>
-    .input-down{
-    float: bottom;
-    }
-</style>
 
 <div class="flex-parent">
     <div class="flex-child"><h1>Their Profile</h1></div>
     <div class="flex-child"><h1>My Profile</h1></div>
 </div>
 
+<div class="input-down">
+    <input style="width: 90%" type="text" placeholder="Message">
+    <button>Send</button>
+</div>
 
-<input class="input-down" type="text" placeholder="Message">
 @code {
 
     [Parameter]

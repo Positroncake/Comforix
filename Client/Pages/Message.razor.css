@@ -5,3 +5,9 @@
 .flex-child {
     flex: 1;
 }
+
+.input-down {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
