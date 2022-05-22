@@ -1,7 +1,11 @@
 ﻿@page "/Search"
 @using Comforix.Shared
 @using System.Text
+@using System.Security.Cryptography
+@using Blazored.LocalStorage
 @inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
 
 <link href="https://fonts.googleapis.com/css2?family=Concert+One&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
@@ -77,6 +81,7 @@
         }
         <p>Details: @acc.Level3</p>
         <p>Reputation: @acc.Reputation</p>
+        <p style="color: #0066cc" @onclick="() => { BeginChat(acc); }">Begin chat</p>
     </div>
 }
 
@@ -108,6 +113,44 @@
 
     private byte _level1Issue;
     private bool _showIssueSelection;
+
+    private async void BeginChat(Account account)
+    {
+    // Hash
+        var sb = new StringBuilder();
+        using var sha256 = SHA256.Create();
+        byte[] hash = sha256.ComputeHash(Encoding.UTF32.GetBytes(account.Username));
+        foreach (byte b in hash) sb.Append(b.ToString("x2"));
+
+    // Preparation for storage to cache
+        string username = account.Username;
+        string level1Type = account.Level1 switch
+        {
+            0 => "Needs help with physical issues",
+            1 => "Needs help with emotional issues",
+            2 => "Needs help with physical and emotional issues",
+            _ => string.Empty
+            };
+        string level2Type = account.Level1 switch
+        {
+            0 => GetPhysicalIssues(account.Level2),
+            1 => GetEmotionalIssues(account.Level2),
+            2 => GetIssues(account.Level2),
+            _ => string.Empty
+            };
+        string level3 = account.Level3 ?? "None";
+        var reputation = account.Reputation.ToString();
+
+    // Store to cache
+        await LocalStorage.SetItemAsStringAsync("username", username);
+        await LocalStorage.SetItemAsStringAsync("l1", level1Type);
+        await LocalStorage.SetItemAsStringAsync("l2", level2Type);
+        await LocalStorage.SetItemAsStringAsync("l3", level3);
+        await LocalStorage.SetItemAsStringAsync("rep", reputation);
+
+    // Redirect
+        NavigationManager.NavigateTo($"/Message/{sb.ToString().ToLowerInvariant()}", true);
+    }
 
     private void Step1Selected(PhysicalOrEmotional selection)
     {
@@ -197,7 +240,7 @@
         StateHasChanged();
     }
 
-    private string GetPhysicalIssues(string issues)
+    private static string GetPhysicalIssues(string issues)
     {
         var sb = new StringBuilder();
         issues = issues[1..^4];
@@ -212,7 +255,7 @@
         return result;
     }
 
-    private string GetEmotionalIssues(string issues)
+    private static string GetEmotionalIssues(string issues)
     {
         var sb = new StringBuilder();
         issues = issues[1..^4];
@@ -227,7 +270,7 @@
         return result;
     }
 
-    private string GetIssues(string issues)
+    private static string GetIssues(string issues)
     {
         var sb = new StringBuilder();
         issues = issues[1..^4];

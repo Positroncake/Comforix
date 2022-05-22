@@ -89,6 +89,30 @@ public class AccountController : ControllerBase
         return Ok(token);
     }
 
+    [HttpPost]
+    [Route("Vote")]
+    public async Task<ActionResult> ModifyUserReputation([FromBody] RepChangeRequest request)
+    {
+        if (request.Vote is < -3 or > 3) return BadRequest();
+        
+        IAccess database = new Access();
+        const string getCurrentRep = "SELECT * FROM accounts WHERE Username = @Username LIMIT 1";
+        List<Account> result = await database.QueryAsync<Account, dynamic>(getCurrentRep, new
+        {
+            Username = request.Username
+        });
+        int reputation = result.First().Reputation;
+
+        const string setNewRep = "UPDATE accounts SET Reputation = @Reputation WHERE Username = @Username";
+        await database.ExecuteAsync(setNewRep, new
+        {
+            Reputation = reputation + request.Vote,
+            Username = request.Username
+        });
+
+        return Ok();
+    }
+
     [HttpGet]
     [Route("FindUsers/{level1Filter:int}/{level2Filter:int}")]
     public async Task<ActionResult> FindUsersWithFilter([FromRoute] int level1Filter, [FromRoute] int level2Filter)
@@ -108,5 +132,23 @@ public class AccountController : ControllerBase
         }
         
         return Ok(filtered);
+    }
+
+    [HttpGet]
+    [Route("GetAccountInfo/{token}")]
+    public async Task<ActionResult> GetAccountInfoFromToken([FromRoute] string token)
+    {
+        string username = await Utils.ValidateToken(token);
+        if (username.Equals(string.Empty)) return Unauthorized();
+
+        IAccess database = new Access();
+        const string sql = "SELECT * FROM accounts WHERE Username = @Username";
+        List<Account> accounts = await database.QueryAsync<Account, dynamic>(sql, new
+        {
+            Username = username
+        });
+
+        Account account = accounts.First();
+        return Ok(account);
     }
 }

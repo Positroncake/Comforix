@@ -29,6 +29,7 @@
 
     private async void SendToServer()
     {
+        _showWrongPassword = false;
         var loginRequest = new LoginReq
         {
             Username = _username,

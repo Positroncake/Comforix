@@ -2,6 +2,7 @@
 @page "/Message/{UserId}"
 @using Comforix.Shared
 @using System.Net
+@using System.Text
 @using Blazored.LocalStorage
 @inject HttpClient HttpClient
 @inject ILocalStorageService LocalStorage
@@ -10,15 +11,43 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 <div class="flex-parent">
     <div class="flex-child box white-text">
-        <h1>Their Profile</h1>
+        <div style="padding: 10px">
+            <h1>Their Profile</h1>
+            <p>@_theirUsername</p>
+            <p>@_theirL1</p>
+            <p>Issues: @_theirL2</p>
+            <p>Details: @_theirL3</p>
+            <p>Reputation: @_theirReputation</p>
+        </div>
     </div>
     <div class="flex-child box white-text">
-        <h1>My Profile</h1>
+        <div style="padding: 10px">
+            <h1>My Profile</h1>
+            <p>@_myUsername</p>
+            <p>@_myL1</p>
+            <p>Issues: @_myL2</p>
+            <p>Details: @_myL3</p>
+            <p>Reputation: @_myReputation</p>
+        </div>
     </div>
 </div>
 
-@* <input @bind="_token"/> *@
-@* <button @onclick="GetMessages">Get</button> *@
+@if (_showVoteOptions)
+{
+    <div>
+        <button class="button-design" @onclick="() => ChangeRep(-3)">(Bad experience) -3</button>
+        <button class="button-design" @onclick="() => ChangeRep(-2)">-2</button>
+        <button class="button-design" @onclick="() => ChangeRep(-1)">-1</button>
+        <button class="button-design" @onclick="() => ChangeRep(0)">0</button>
+        <button class="button-design" @onclick="() => ChangeRep(1)">1</button>
+        <button class="button-design" @onclick="() => ChangeRep(2)">2</button>
+        <button class="button-design" @onclick="() => ChangeRep(3)">3 (Positive experience)</button>
+    </div>
+}
+@if (_showVoteOptions is false)
+{
+    <p>Thank you for your feedback.</p>
+}
 
 <div class="input-down">
     <div style="height: 75px; background-color: #ffffff">
@@ -33,13 +62,13 @@
         if (_messages[i].Sending)
         {
             <p class="blue-color-box">
-                @_messages[i].Content <i>@@@_messages[i].SentTime.ToString("O")</i>
+                @_messages[i].Content <i>@@@_messages[i].SentTime.ToString("u")</i>
             </p>
         }
         if (_messages[i].Sending is false)
         {
             <p class="grey-color-box">
-                @_messages[i].Content <i>@@@_messages[i].SentTime.ToString("O")</i>
+                @_messages[i].Content <i>@@@_messages[i].SentTime.ToString("u")</i>
             </p>
         }
     }
@@ -54,11 +83,69 @@
     private string _token = string.Empty;
     private List<MessageDb> _messages = new();
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private string _theirUsername = string.Empty;
+    private string _theirL1 = string.Empty;
+    private string _theirL2 = string.Empty;
+    private string _theirL3 = string.Empty;
+    private string _theirReputation = string.Empty;
+
+    private string _myUsername = string.Empty;
+    private string _myL1 = string.Empty;
+    private string _myL2 = string.Empty;
+    private string _myL3 = string.Empty;
+    private string _myReputation = string.Empty;
+
+    private bool _showVoteOptions = true;
+
+    private async void ChangeRep(sbyte change)
+    {
+        var rep = new RepChangeRequest
+        {
+            Username = _theirUsername,
+            Vote = change
+        };
+        HttpResponseMessage response = await HttpClient.PostAsJsonAsync("AccountApi/Vote", rep);
+        if (response.StatusCode is HttpStatusCode.InternalServerError) await HttpClient.PostAsJsonAsync("AccountApi/Vote", rep);
+        _showVoteOptions = false;
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
     {
         string token = await LocalStorage.GetItemAsStringAsync("token");
         if (string.IsNullOrEmpty(token)) NavigationManager.NavigateTo("/Login", true);
         _token = token;
+
+        HttpResponseMessage response = await HttpClient.GetAsync($"AccountApi/GetAccountInfo/{_token}");
+    // ReSharper disable once ConvertIfStatementToSwitchStatement
+        if (response.StatusCode is HttpStatusCode.InternalServerError) await HttpClient.GetAsync($"AccountApi/GetAccountInfo/{_token}");
+        if (response.StatusCode is HttpStatusCode.Unauthorized) NavigationManager.NavigateTo("/Login", true);
+
+        var account = (await response.Content.ReadFromJsonAsync<Account>())!;
+        _myUsername = account.Username;
+        _myL1 = account.Level1 switch
+        {
+            0 => "Needs help with physical issues",
+            1 => "Needs help with emotional issues",
+            2 => "Needs help with physical and emotional issues",
+            _ => string.Empty
+            };
+        _myL2 = account.Level1 switch
+        {
+            0 => GetPhysicalIssues(account.Level2),
+            1 => GetEmotionalIssues(account.Level2),
+            2 => GetIssues(account.Level2),
+            _ => string.Empty
+            };
+        _myL3 = account.Level3 ?? "None";
+        _myReputation = account.Reputation.ToString();
+
+        _theirUsername = await LocalStorage.GetItemAsStringAsync("username");
+        _theirL1 = await LocalStorage.GetItemAsStringAsync("l1");
+        _theirL2 = await LocalStorage.GetItemAsStringAsync("l2");
+        _theirL3 = await LocalStorage.GetItemAsStringAsync("l3");
+        _theirReputation = await LocalStorage.GetItemAsStringAsync("rep");
+
         GetMessages();
     }
 
@@ -68,10 +155,12 @@
         {
             Token = _token,
             Dest = UserId,
+            DestUsername = _theirUsername,
             Content = _message
         };
         HttpResponseMessage response = await HttpClient.PostAsJsonAsync("MessageApi/Send", message);
         if (response.StatusCode is HttpStatusCode.InternalServerError) await HttpClient.PostAsJsonAsync("MessageApi/Send", message);
+        _message = string.Empty;
     }
 
     private async void GetMessages()
@@ -83,6 +172,51 @@
             _messages = await result.Content.ReadFromJsonAsync<List<MessageDb>>() ?? new List<MessageDb>();
             StateHasChanged();
         }, new AutoResetEvent(false), 1000, 1000);
+    }
+
+    private string GetPhysicalIssues(string issues)
+    {
+        var sb = new StringBuilder();
+        issues = issues[1..^4];
+        ushort[] split = issues.Split('\u001f').Select(ushort.Parse).ToArray();
+        foreach (ushort uint16 in split)
+        {
+            var physicalIssue = (PhysicalIssue)uint16;
+            sb.Append(string.Join(", ", physicalIssue.ToString().Split('_')));
+        }
+        var result = sb.ToString();
+        result = result[..^2];
+        return result;
+    }
+
+    private string GetEmotionalIssues(string issues)
+    {
+        var sb = new StringBuilder();
+        issues = issues[1..^4];
+        ushort[] split = issues.Split('\u001f').Select(ushort.Parse).ToArray();
+        foreach (ushort uint16 in split)
+        {
+            var emotionalIssue = (EmotionalIssue)uint16;
+            sb.Append(string.Join(", ", emotionalIssue.ToString().Split('_')));
+        }
+        var result = sb.ToString();
+        result = result[..^2];
+        return result;
+    }
+
+    private string GetIssues(string issues)
+    {
+        var sb = new StringBuilder();
+        issues = issues[1..^4];
+        ushort[] split = issues.Split('\u001f').Select(ushort.Parse).ToArray();
+        foreach (ushort uint16 in split)
+        {
+            var issue = (Issue)uint16;
+            sb.Append(string.Join(' ', issue.ToString().Split('_')) + ", ");
+        }
+        var result = sb.ToString();
+        result = result[..^2];
+        return result;
     }
 
 }

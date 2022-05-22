@@ -54,7 +54,7 @@
     color: #0b5ed7;
 }
 
-.description{
+.description {
     margin: auto;
     width: 80%;
     padding: 10px;
@@ -65,6 +65,32 @@
     margin-top: 10px;
     left: 150px;
 }
+
 h2 {
     font-size: 16px;
+}
+
+.submit-btn {
+    background-color: white;
+    width: 100%;
+    color: black;
+    padding: 25px;
+    margin: 10px 0px;
+}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    margin: 8px 0;
+    padding: 22px 20px;
+    border: 2px black;
+    box-sizing: border-box;
+}
+
+button:hover {
+    opacity: 0.7;
+}
+
+.container {
+    padding: 35px;
+    background-color: #CEE7FF;
 }

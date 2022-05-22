@@ -13,26 +13,25 @@ public class MessageController : ControllerBase
     public async Task<ActionResult> SendMessage([FromBody] MessagePacket message)
     {
         // Validate token
-        string username = await Utils.ValidateToken(message.Token);
-        if (username.Equals(string.Empty)) return Unauthorized("Invalid token.");
+        string senderUsername = await Utils.ValidateToken(message.Token);
+        if (senderUsername.Equals(string.Empty)) return Unauthorized("Invalid token.");
 
-        // Get table name (SHA-384 hash of username)
-        string sender = Utils.HashUsername(username);
-        string receiver = message.Dest;
+        // Get table name (SHA-256 hash of username)
+        string sender = Utils.HashUsername(senderUsername);
 
         // Store in sender database
         IAccess database = new Access();
         var sql = $"INSERT INTO `{sender}` (Username, Content, Sending, SentTime) VALUES (@Username, @Content, @Sending, @SentTime)";
         await database.ExecuteAsync(sql, new
         {
-            Username = receiver,
+            Username = message.Dest,
             message.Content,
             Sending = true,
             SentTime = DateTime.UtcNow
         });
 
         // Store in recipient database
-        var sql2 = $"INSERT INTO `{receiver}` (Username, Content, Sending, SentTime) VALUES (@Username, @Content, @Sending, @SentTime)";
+        var sql2 = $"INSERT INTO `{message.Dest}` (Username, Content, Sending, SentTime) VALUES (@Username, @Content, @Sending, @SentTime)";
         await database.ExecuteAsync(sql2, new
         {
             Username = sender,

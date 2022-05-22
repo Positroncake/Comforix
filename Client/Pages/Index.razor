@@ -6,6 +6,7 @@
 @using Blazored.LocalStorage
 @inject HttpClient HttpClient
 @inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap" rel="stylesheet">
@@ -56,14 +57,11 @@
 
 @if (_showStep3)
 {
-    <div class="description">
-        <h2>If Prefered, Please Provide Additional Information</h2>
+    <div class="centre-margin-top description">
+        <h2>Description/Additional information (optional):</h2>
     </div>
-    
-    <div class="centre-margin-top">
-        <input @bind="_description"/>
-    </div>
-    
+    <textarea class="centre" style="width: 500px; height: 200px" @bind="_description"></textarea>
+
     <div class="centre">
         <button class="button-design"@onclick="Step3Selected">Proceed</button>
     </div>
@@ -78,19 +76,14 @@ input {
 </style>
 @if (_showStep4)
 {
-    <div class="text-center pt-md-5">
-        <h2 class="text-center mb-5">Register</h2>
-        <div class="d-flex flex-row justify-content-center">
-            <div style="color: #000000" class="form-box">
-                <label for="signup-username">Username</label>
-                <input style="width: 200px" type="text" id="signup-username" @bind="_uname"/><br/><br/>
-                <label for="signup-password">Password</label>
-                <input style="width: 200px" type="password" id="signup-password" @bind="_pwd"/><br/><br/>
-                <label for="signup-password-conf">Confirm Password</label>
-                <input style="width: 200px" type="password" id="signup-password-conf" @bind="_pwdConf"/><br/><br/>
-                <button class="button-design" @onclick="SendToServer">Register!</button>
-            </div>
-        </div>
+    <div class="container">
+        <label>Username</label>
+        <input type="text" placeholder="Enter Username" @bind="_uname" required>
+        <label>Password</label>
+        <input type="password" placeholder="Enter Password" @bind="_pwd" required>
+        <label>Confirm Password</label>
+        <input type="password" placeholder="Confirm Password" @bind="_pwdConf" required>
+        <button class="submit-btn" @onclick="SendToServer">Register!</button>
     </div>
 }
 
@@ -105,6 +98,9 @@ input {
 @if (_showComplete)
 {
     <p class="centre">Registered!</p>
+    <div class="centre">
+        <button class="button-design" @onclick="Startup">Start looking for people!</button>
+    </div>
 }
 @if (_showError)
 {
@@ -121,6 +117,12 @@ input {
 @if (_showUsernameTakenError)
 {
     <p class="centre">Error: Username taken.</p>
+}
+@if (_showBackBtn)
+{
+    <div class="centre">
+        <button class="button-design" @onclick="GoBack">Back</button>
+    </div>
 }
 
 @code {
@@ -156,8 +158,27 @@ input {
 
     private byte _peSelection;
     private ushort _issue;
-    private bool _showStep2, _showStep3, _showStep4;
+    private bool _showStep2, _showStep3, _showStep4, _showBackBtn;
     private string _description = string.Empty;
+
+    private void GoBack()
+    {
+        _showStep4 = true;
+        _showBackBtn = false;
+
+        _showSalting = false;
+        _showSending = false;
+        _showComplete = false;
+        _showError = false;
+        _showPasswordMismatchError = false;
+        _showDatabaseConnectionError = false;
+        _showUsernameTakenError = false;
+    }
+
+    private void Startup()
+    {
+        NavigationManager.NavigateTo("/Search", true);
+    }
 
     private void Step1Selected(PhysicalOrEmotional selection)
     {
@@ -240,6 +261,7 @@ input {
 
     private void Step3Selected()
     {
+        if (string.IsNullOrEmpty(_description)) _description = "None";
         _showStep4 = true;
     }
 
@@ -254,6 +276,8 @@ input {
 
     private async void SendToServer()
     {
+        _showStep4 = false;
+        
         _showSalting = false;
         _showSending = false;
         _showComplete = false;
@@ -266,6 +290,7 @@ input {
         if (string.IsNullOrEmpty(_uname) || string.IsNullOrEmpty(_pwd) || string.IsNullOrEmpty(_pwdConf))
         {
             _showError = true;
+            _showBackBtn = true;
             return;
         }
 
@@ -273,6 +298,7 @@ input {
         if (_pwd.Equals(_pwdConf) is false)
         {
             _showPasswordMismatchError = true;
+            _showBackBtn = true;
             return;
         }
 
@@ -304,6 +330,7 @@ input {
         if (response.StatusCode is HttpStatusCode.InternalServerError)
         {
             _showDatabaseConnectionError = true;
+            _showBackBtn = true;
             StateHasChanged();
             return;
         }
@@ -312,6 +339,7 @@ input {
         if (response.StatusCode is HttpStatusCode.Conflict)
         {
             _showUsernameTakenError = true;
+            _showBackBtn = true;
             StateHasChanged();
             return;
         }
