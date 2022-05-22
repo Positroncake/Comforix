@@ -4,12 +4,9 @@
 @using System.Net
 @inject HttpClient HttpClient
 <style>
-    .text-align-left{
-    left: 150px;
-    } 
-    .text-align-right{
-        right: 150px;;
-        }
+    .input-down{
+    float: bottom;
+    }
 </style>
 
 <div class="flex-parent">
@@ -17,6 +14,8 @@
     <div class="flex-child"><h1>My Profile</h1></div>
 </div>
 
+
+<input class="input-down" type="text" placeholder="Message">
 @code {
 
     [Parameter]
