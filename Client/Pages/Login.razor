@@ -1,6 +1,45 @@
 @page "/Login"
-<h3>Login</h3>
 
-@code {
-    
-}
+<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+
+<head>
+    <style>   
+Body {  
+  font-family: Varela Round;
+}  
+button {   
+       background-color: white;   
+       width: 100%;  
+       color: black;   
+       padding: 25px;   
+       margin: 10px 0px;    
+         }   
+ 
+ input[type=text], input[type=password] {   
+        width: 100%;   
+        margin: 8px 0;  
+        padding: 22px 20px;    
+        border: 2px black;   
+        box-sizing: border-box;   
+    }  
+ button:hover {   
+        opacity: 0.7;   
+    }   
+     
+ .container {   
+        padding: 35px;   
+        background-color: #CEE7FF;  
+    }   
+</style>   
+</head>    
+<body>
+<form>  
+    <div class="container">   
+        <label>Username</label>   
+        <input type="text" placeholder="Enter Username" name="username" required>  
+        <label>Password</label>   
+        <input type="password" placeholder="Enter Password" name="password" required>  
+        <button type="submit">Login</button>
+    </div>   
+</form>     
+</body>     
