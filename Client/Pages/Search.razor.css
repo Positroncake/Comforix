@@ -12,6 +12,7 @@
 h3{
     color: #CF9BFF;
     font-family: Courier Prime;
+    
 }
 label{
     color: #0E37AD;
@@ -19,3 +20,10 @@ label{
 .label-font{
     font-family: Concert One;
  }
+.div-center{
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
