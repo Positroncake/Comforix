@@ -1,10 +1,10 @@
 @page "/Message"
 @page "/Message/{UserId}"
 @inject HttpClient HttpClient
-
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 <div class="flex-parent">
-    <div class="flex-child"><h1>Their Profile</h1></div>
-    <div class="flex-child"><h1>My Profile</h1></div>
+    <div class="flex-child box white-text"><h1> &nbsp;Their Profile</h1></div>
+    <div class="flex-child box white-text"><h1> &nbsp;My Profile</h1></div>
 </div>
 
 <div class="input-down">
@@ -12,6 +12,10 @@
     <button>Send</button>
 </div>
 
+<p class="grey-color-box"></p>
+<p class="blue-color-box"></p>
+<p class="blue-color-box-short"></p>
+<p class="grey-color-box-long"></p>
 @code {
 
     [Parameter]
