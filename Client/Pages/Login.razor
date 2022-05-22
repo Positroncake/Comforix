@@ -1,45 +1,53 @@
 @page "/Login"
+@using Comforix.Shared
+@using System.Text
+@using System.Net
+@using Blazored.LocalStorage
+@inject HttpClient HttpClient
+@inject ILocalStorageService LocalStorage
 
 <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
 
-<head>
-    <style>   
-Body {  
-  font-family: Varela Round;
-}  
-button {   
-       background-color: white;   
-       width: 100%;  
-       color: black;   
-       padding: 25px;   
-       margin: 10px 0px;    
-         }   
- 
- input[type=text], input[type=password] {   
-        width: 100%;   
-        margin: 8px 0;  
-        padding: 22px 20px;    
-        border: 2px black;   
-        box-sizing: border-box;   
-    }  
- button:hover {   
-        opacity: 0.7;   
-    }   
-     
- .container {   
-        padding: 35px;   
-        background-color: #CEE7FF;  
-    }   
-</style>   
-</head>    
-<body>
-<form>  
-    <div class="container">   
-        <label>Username</label>   
-        <input type="text" placeholder="Enter Username" name="username" required>  
-        <label>Password</label>   
-        <input type="password" placeholder="Enter Password" name="password" required>  
-        <button type="submit">Login</button>
-    </div>   
-</form>     
-</body>     
+<div class="container">
+    <label>Username</label>
+    <input type="text" placeholder="Enter Username" @bind="_username" required>
+    <label>Password</label>
+    <input type="password" placeholder="Enter Password" @bind="_password" required>
+    <button @onclick="SendToServer">Login</button>
+</div>
+
+@if (_showWrongPassword)
+{
+    <p>Incorrect username and/or password.</p>
+}
+
+@code {
+
+    private string _username = string.Empty;
+    private string _password = string.Empty;
+    private bool _showWrongPassword;
+
+    private async void SendToServer()
+    {
+        var loginRequest = new LoginReq
+        {
+            Username = _username,
+            Password = Encoding.UTF32.GetBytes(_password)
+        };
+        HttpResponseMessage result = await HttpClient.PostAsJsonAsync("AccountApi/Login", loginRequest);
+    // ReSharper disable once ConvertIfStatementToSwitchStatement
+        if (result.StatusCode is HttpStatusCode.InternalServerError) await HttpClient.PostAsJsonAsync("AccountApi/Login", loginRequest);
+        if (result.StatusCode is HttpStatusCode.Unauthorized)
+        {
+            _showWrongPassword = true;
+            _username = string.Empty;
+            _password = string.Empty;
+            StateHasChanged();
+            return;
+        }
+        
+        string token = (await result.Content.ReadAsStringAsync()).ToLowerInvariant();
+        await LocalStorage.SetItemAsStringAsync("token", token);
+    }
+
+}

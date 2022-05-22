@@ -63,24 +63,27 @@ public class AccountController : ControllerBase
     [Route("Login")]
     public async Task<ActionResult> LoginToAcc([FromBody] LoginReq request)
     {
-        // Check if account exists. If exists, retrieve
-        IAccess database = new Access();
-        const string sql = "SELECT * FROM accounts WHERE Username = @Username LIMIT 1";
-        List<Account> accounts = await database.QueryAsync<Account, dynamic>(sql, new
+        // Get account from database if exists
+        IAccess access = new Access();
+        const string sql = "SELECT * FROM accounts WHERE Username = @LoginUsername LIMIT 1";
+        List<Account> accounts = await access.QueryAsync<Account, dynamic>(sql, new
         {
-            Username = request.Username
+            LoginUsername = request.Username
         });
-        if (accounts.Count is not 1) return Unauthorized();
-        Account selected = accounts.First();
+        
+        // Check if account exists
+        Account selected;
+        if (accounts.Count == 1) selected = accounts.First();
+        else return Unauthorized();
 
-        // Salt
-        byte[] hash = request.Password.Concat(selected.PasswordHash).ToArray();
+        // Add salt to inputted password
+        byte[] hash = request.Password.Concat(selected.PasswordSalt).ToArray();
         
-        // Hash
-        using var hasher = SHA512.Create();
-        hash = hasher.ComputeHash(hash);
+        // Hash inputted password
+        var sha512 = SHA512.Create();
+        for (var i = 0; i < 5000; ++i) hash = sha512.ComputeHash(hash);
         
-        // Compare
+        // Validation - compare inputted hash against hash in database
         if (hash.SequenceEqual(selected.PasswordHash) is false) return Unauthorized();
         string token = await Utils.NewToken(selected.Username);
         return Ok(token);
