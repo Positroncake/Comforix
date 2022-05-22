@@ -1,9 +1,21 @@
 .div-wrap {
     display: inline-block;
-    border: 2px solid #0066cc;
+    border: 4px solid #7BBDFF;
+    border-radius: 15%;
     padding: 20px;
     margin: 20px 20px 20px 20px;
+    box-shadow: 10px 20px #B2D8FF;
 }
 .padding{
     margin-left: 20px;
 }
+h3{
+    color: #CF9BFF;
+    font-family: Courier Prime;
+}
+label{
+    color: #0E37AD;
+}
+.label-font{
+    font-family: Concert One;
+ }
