@@ -11,20 +11,24 @@
     bottom: 0;
     width: 100%;
 }
-.box{
+
+.box {
     border: 5px #6CA0C2;
     background-color: #85B0CD;
     margin: 20px;
 }
-.white-text{
+
+.white-text {
     color: #f0f0f0;
     font-family: "Fredoka One"
 }
-button{
-    background-color:#85B0CD;
+
+button {
+    background-color: #85B0CD;
     color: white;
 }
-.grey-color-box{
+
+.grey-color-box {
     width: 500px;
     height: 100px;
     border: 1px;
@@ -32,7 +36,8 @@ button{
     padding: 0;
     background-color: #D7DCDF;
 }
-.blue-color-box{
+
+.blue-color-box {
     width: 500px;
     height: 100px;
     border: 1px;
@@ -40,7 +45,8 @@ button{
     padding: 0;
     background-color: #DEF0FA;
 }
-.blue-color-box-short{
+
+.blue-color-box-short {
     width: 300px;
     height: 100px;
     border: 1px;
@@ -48,10 +54,20 @@ button{
     padding: 0;
     background-color: #DEF0FA;
 }
-.grey-color-box-long{
+
+.grey-color-box-long {
     width: 800px;
     height: 100px;
     border: 1px;
     margin-left: 18px;
     padding: 0;
     background-color: #D7DCDF;
+}
+
+.button-design {
+    padding: 10px 20px 10px 20px;
+    margin: 10px 10px 10px 10px;
+    font-family: Lexend, monospace;
+    border-radius: 15%;
+    box-shadow: 5px 10px #add8e6;
+}

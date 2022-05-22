@@ -1,24 +1,88 @@
 @page "/Message"
 @page "/Message/{UserId}"
+@using Comforix.Shared
+@using System.Net
+@using Blazored.LocalStorage
 @inject HttpClient HttpClient
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 <div class="flex-parent">
-    <div class="flex-child box white-text"><h1> &nbsp;Their Profile</h1></div>
-    <div class="flex-child box white-text"><h1> &nbsp;My Profile</h1></div>
+    <div class="flex-child box white-text">
+        <h1>Their Profile</h1>
+    </div>
+    <div class="flex-child box white-text">
+        <h1>My Profile</h1>
+    </div>
 </div>
+
+@* <input @bind="_token"/> *@
+@* <button @onclick="GetMessages">Get</button> *@
 
 <div class="input-down">
-    <input style="width: 90%" type="text" placeholder="Message">
-    <button>Send</button>
+    <div style="height: 75px; background-color: #ffffff">
+        <input style="width: 90%; height: 50px" type="text" placeholder="Message" @bind="_message"/>
+        <button class="button-design" @onclick="SendMessage">Send</button>
+    </div>
 </div>
 
-<p class="grey-color-box"></p>
-<p class="blue-color-box"></p>
-<p class="blue-color-box-short"></p>
-<p class="grey-color-box-long"></p>
+<div style="overflow-y: scroll; height: 60%">
+    @for (int i = _messages.Count - 1; i >= 0; --i)
+    {
+        if (_messages[i].Sending)
+        {
+            <p class="blue-color-box">
+                @_messages[i].Content <i>@@@_messages[i].SentTime.ToString("O")</i>
+            </p>
+        }
+        if (_messages[i].Sending is false)
+        {
+            <p class="grey-color-box">
+                @_messages[i].Content <i>@@@_messages[i].SentTime.ToString("O")</i>
+            </p>
+        }
+    }
+</div>
+
 @code {
 
     [Parameter]
     public string UserId { get; set; } = string.Empty;
+
+    private string _message = string.Empty;
+    private string _token = string.Empty;
+    private List<MessageDb> _messages = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        string token = await LocalStorage.GetItemAsStringAsync("token");
+        if (string.IsNullOrEmpty(token)) NavigationManager.NavigateTo("/Login", true);
+        _token = token;
+        GetMessages();
+    }
+
+    private async void SendMessage()
+    {
+        var message = new MessagePacket
+        {
+            Token = _token,
+            Dest = UserId,
+            Content = _message
+        };
+        HttpResponseMessage response = await HttpClient.PostAsJsonAsync("MessageApi/Send", message);
+        if (response.StatusCode is HttpStatusCode.InternalServerError) await HttpClient.PostAsJsonAsync("MessageApi/Send", message);
+    }
+
+    private async void GetMessages()
+    {
+        var _ = new Timer(async stateInfo =>
+        {
+            HttpResponseMessage result = await HttpClient.GetAsync($"MessageApi/Get/{_token}/{UserId}");
+            if (result.StatusCode is HttpStatusCode.InternalServerError) await HttpClient.GetAsync($"MessageApi/Get/{_token}/{UserId}");
+            _messages = await result.Content.ReadFromJsonAsync<List<MessageDb>>() ?? new List<MessageDb>();
+            StateHasChanged();
+        }, new AutoResetEvent(false), 1000, 1000);
+    }
 
 }
