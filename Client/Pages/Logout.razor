@@ -1,0 +1,14 @@
+@page "/Logout"
+@using Blazored.LocalStorage
+@inject ILocalStorageService LocalStorage
+
+<p style="text-align: center">You are now logged out.</p>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LocalStorage.ClearAsync();
+    }
+
+}

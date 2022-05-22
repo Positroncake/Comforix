@@ -14,10 +14,66 @@
 
 <PageTitle>Index</PageTitle>
 
-<div class="title">
-    <h1>Welcome to Comforix</h1>
+<div style="height: 300px; background-color: #0066cc;">
+    <div style="padding: 20px;">
+        <p style="text-align: center;">&nbsp;</p>
+        <p style="text-align: center;">&nbsp;</p>
+        <h1 style="text-align: center;">
+            <span style="color: #ffffff;">
+                <strong>Welcome to Comforix!</strong><br/>
+            </span>
+        </h1>
+        <p style="text-align: left;">
+            <span style="color: #ffffff;">Comforix is a platform where people who go through similar mental and physical distress can connect and share their similar difficulties with each other across the globe.</span>
+        </p>
+        <p style="text-align: left;">&nbsp;</p>
+        <p style="text-align: center;">
+            <em>
+                <strong>
+                    <span style="color: #ffffff;">V&nbsp; V&nbsp; V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Scroll down to get started&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; V&nbsp; V&nbsp; V</span>
+                </strong>
+            </em>
+        </p>
+    </div>
+</div>
+<div style="padding: 80px">
+    <h2 style="text-align: center;">How it works</h2>
+    <h4 style="text-align: right;">Creating your account</h4>
+    <br/>
+    <ol>
+        <li>Select which issue(s) you are having down below. First, select whether it's physical, emotional, or both. You can then refine your issue by selecting one or more of our sub-categories. If your issue is not listed, please select "something else".</li>
+        <li>Once you've selected your issue, a large input area will appear, allowing you to write a description of yourself and details on your issue. If you selected "something else" in the previous step, now is a good time to write what the issue is. This step is optional!</li>
+        <li>We now arrive at the final step: creating your account! Pick a username for yourself - for your own privacy, please don't use your real name. If the username is taken or if something else is wrong, the website will tell you how to fix it.</li>
+    </ol>
+    <br/>
+    <h4 style="text-align: right;">Searching for people to talk to</h4>
+    <br/>
+    <ol>
+        <li>You've successfully made your account, and now you're ready to talk to people. Head to the "Search" page, and select whether your issue is physical, emotional, or both. Then, refine your search, just like the account creation process. Once you've selected the issues you want, hit "Apply filters".</li>
+        <li>Users having the same issues as you show up, and each of them have a reputation. Everyone first starts with 9 reputation, and the higher the number is, the better. Feel free to browse through the users until you find a good match.</li>
+        <li>Once you've found a match, press "Begin chat" and you should be redirected to a chat window.</li>
+    </ol>
+    <br/>
+    <h4 style="text-align: right;">Chatting!</h4>
+    <br/>
+    <ol>
+        <li>Comforix functions similar to a normal chat app - you type your message in to the "Input" text box at the bottom of the page and press the "Send" button. Your messages will show in blue, and the other person's messages will show in grey.</li>
+        <li>Once you're done chatting, please take a moment to rate the person you just talked with by pressing one of the buttons labelled "-3" through "3". A score of -3 means you had the worst experience, while a score of 3 means you had the best experience. Voting helps combat toxicity and promotes people who are helpful.</li>
+        <li>Finally, make sure to log out when you're done using our site - a security system is only as strong as its weakest link, and our security measures won't be able to do much if you leave your account exposed and unlocked.</li>
+    </ol>
+    <br/>
+    <p style="text-align: center;">We hope you enjoy using Comforix!</p>
+    <br/>
+    <p style="text-align: center;">
+        <span style="color: #0066cc;">
+            <em>
+                <strong>V&nbsp; V&nbsp; V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Scroll down to get started&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; V&nbsp; V&nbsp; V</strong>
+            </em>
+        </span>
+    </p>
 </div>
 
+<p style="text-align: center;">Select your issue:</p>
 <div class="centre">
     <button class="button-design" @onclick="() => { Step1Selected(PhysicalOrEmotional.Physical); }">Physical</button>
     <button class="button-design" @onclick="() => { Step1Selected(PhysicalOrEmotional.Emotional); }">Emotional</button>
@@ -277,7 +333,7 @@ input {
     private async void SendToServer()
     {
         _showStep4 = false;
-        
+
         _showSalting = false;
         _showSending = false;
         _showComplete = false;
