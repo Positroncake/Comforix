@@ -56,6 +56,11 @@
 }
 
 .description{
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
     font-family: Zen Maru Gothic, Medium;
     color: #000000;
     margin-top: 10px;
