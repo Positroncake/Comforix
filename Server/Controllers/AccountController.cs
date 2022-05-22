@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Comforix.Shared;
 using DatabaseAccess;
@@ -39,9 +40,22 @@ public class AccountController : ControllerBase
             account.Level3,
             Reputation = 9
         });
+        
+        // Create database table for user
+        string sha256Hash = Utils.HashUsername(account.Username);
+        var sql = @$"CREATE TABLE `{sha256Hash}` (
+    Username TINYTEXT,
+    Content TEXT,
+    Sending BOOL,
+    SentTime DATETIME
+)";
+        await database.ExecuteAsync(sql, new
+        {
+            TableName = sha256Hash
+        });
 
         // Create token
-        string token = await TokenUtils.NewToken(account.Username);
+        string token = await Utils.NewToken(account.Username);
         return Ok(token);
     }
 
@@ -68,13 +82,13 @@ public class AccountController : ControllerBase
         
         // Compare
         if (hash.SequenceEqual(selected.PasswordHash) is false) return Unauthorized();
-        string token = await TokenUtils.NewToken(selected.Username);
+        string token = await Utils.NewToken(selected.Username);
         return Ok(token);
     }
 
     [HttpGet]
     [Route("FindUsers/{level1Filter:int}/{level2Filter:int}")]
-    public async Task<ActionResult> FindUsersWithFilter(int level1Filter, int level2Filter)
+    public async Task<ActionResult> FindUsersWithFilter([FromRoute] int level1Filter, [FromRoute] int level2Filter)
     {
         IAccess database = new Access();
         const string sql = "SELECT * FROM accounts WHERE Level1 = @Level1";

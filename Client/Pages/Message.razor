@@ -1,0 +1,40 @@
+@page "/Message/{UserId}"
+@using Comforix.Shared
+@using System.Net
+@inject HttpClient HttpClient
+
+<h3>Message</h3>
+
+<input @bind="_token"/>
+<input @bind="_message"/>
+<button @onclick="SendMessage">Send</button>
+
+<br/>
+<button @onclick="GetMessages">Get</button>
+
+@code {
+
+    [Parameter]
+    public string UserId { get; set; } = string.Empty;
+
+    private string _message = string.Empty;
+    private string _token = string.Empty;
+
+    private async void SendMessage()
+    {
+        var message = new MessagePacket
+        {
+            Token = _token,
+            Dest = UserId,
+            Content = _message
+        };
+        HttpResponseMessage response = await HttpClient.PostAsJsonAsync("MessageApi/Send", message);
+        if (response.StatusCode is HttpStatusCode.InternalServerError) await HttpClient.PostAsJsonAsync("MessageApi/Send", message);
+    }
+
+    private async void GetMessages()
+    {
+        HttpResponseMessage result = await HttpClient.GetAsync($"MessageApi/Get/{_token}/{UserId}");
+    }
+
+}
