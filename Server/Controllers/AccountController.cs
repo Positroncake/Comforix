@@ -98,6 +98,12 @@ public class AccountController : ControllerBase
         });
 
         List<Account> filtered = matches.Where(account => account.Level2.Contains("\u001f" + level2Filter + "\u001f")).ToList();
+        foreach (Account x in filtered)
+        {
+            x.PasswordHash = Array.Empty<byte>();
+            x.PasswordSalt = Array.Empty<byte>();
+        }
+        
         return Ok(filtered);
     }
 }

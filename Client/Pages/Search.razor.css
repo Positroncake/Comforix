@@ -5,25 +5,67 @@
     padding: 20px;
     margin: 20px 20px 20px 20px;
     box-shadow: 10px 20px #B2D8FF;
+    flex-wrap: wrap;
+    width: 300px;
+    height: 300px;
 }
-.padding{
+
+.padding {
     margin-left: 20px;
 }
-h3{
+
+h3 {
     color: #CF9BFF;
     font-family: Courier Prime;
-    
 }
-label{
+
+label {
     color: #0E37AD;
 }
-.label-font{
+
+.label-font {
     font-family: Concert One;
- }
-.div-center{
+}
+
+.div-centre {
     margin: auto;
     width: 80%;
     padding: 10px;
     display: flex;
+    justify-content: center;
+}
+
+.button-design {
+    padding: 10px 20px 10px 20px;
+    margin: 10px 10px 10px 10px;
+    font-family: Lexend, monospace;
+    border-radius: 15%;
+    box-shadow: 5px 10px #add8e6;
+}
+
+.button-design-purple {
+    padding: 10px 20px 10px 20px;
+    margin: 10px 10px 10px 10px;
+    font-family: Lexend, monospace;
+    border-radius: 15%;
+    box-shadow: 5px 10px #CF9BFF;
+}
+
+.button-design-dark {
+    padding: 10px 20px 10px 20px;
+    margin: 10px 10px 10px 10px;
+    font-family: Lexend, monospace;
+    border-radius: 15%;
+    box-shadow: 5px 10px #50A3BF;
+    background-color: #ffffff;
+    color: #0b5ed7;
+}
+
+.centre-wrap {
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 }

@@ -1,88 +1,245 @@
 ﻿@page "/Search"
+@using Comforix.Shared
+@using System.Text
+@inject HttpClient HttpClient
+
 <link href="https://fonts.googleapis.com/css2?family=Concert+One&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
-<h3 class="div-center">FILTER:</h3>
-<div class="div-center"> 
-<label class="label-font">
-    <input class="padding" type="radio" name="physical-emotional-both"> Physical
-</label>
-<label class="label-font">
-    <input class="padding" type="radio" name="physical-emotional-both"> Emotional
-</label>
-<label class="label-font">
-    <input class="padding" type="radio" name="physical-emotional-both"> Both
-</label>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500&display=swap" rel="stylesheet">
+
+<h3 class="div-centre">FILTER:</h3>
+<div class="div-centre">
+    <button class="button-design" @onclick="() => { Step1Selected(PhysicalOrEmotional.Physical); }">Physical</button>
+    <button class="button-design" @onclick="() => { Step1Selected(PhysicalOrEmotional.Emotional); }">Emotional</button>
+    <button class="button-design" @onclick="() => { Step1Selected(PhysicalOrEmotional.Both); }">Both</button>
 </div>
-<p></p>
-<div class="div-center"> 
-<label class="padding label-font" for="depression"><input id="depression" type="checkbox" name="difficulty"> Depression</label>
-<label class="padding label-font" for="anxiety"><input id="anxiety" type="checkbox" name="difficulty"> Anxiety</label>
-<label class="padding label-font" for="PTSD"><input id="PTSD" type="checkbox" name="difficulty"> PTSD</label>
-<label class="padding label-font" for="stress"><input id="stress" type="checkbox" name="difficulty"> Stress</label>
-<label class="padding label-font" for="broken-leg"><input id="broken-leg" type="checkbox" name="difficulty"> Broken Leg</label>
-<label class="padding label-font" for="broken-arm"><input id="broken-arm" type="checkbox" name="difficulty"> Broken Arm</label>
-<label class="padding label-font" for="cancer"><input id="cancer" type="checkbox" name="difficulty"> Cancer</label>
-<label class="padding label-font" for="something-else"><input id="something-else" type="checkbox" name="difficulty"> Something Else</label>
-<label class="padding label-font" for="prefer-not-to-say"><input id="prefer-not-to-say" type="checkbox" name="difficulty"> Prefer Not To Say</label>
-</div>
+
+@if (_showIssueSelection)
+{
+    <div class="centre-wrap">
+        <br/>
+        @if (_buttonsP.Count is not 0)
+        {
+            for (var i = 0; i < _buttonsP.Count; ++i)
+            {
+                int index = i;
+                <button class="button-design-dark" style="color: @(_buttonsP[index].Selected ? "#ffffff" : "#000000"); background-color: @(_buttonsP[index].Selected ? "#0c63e4" : "#ffffff")" @onclick="() => { Step2Clicked(_buttonsP[index].PhysicalIssue, index); }">@string.Join(' ', _buttonsP[index].PhysicalIssue.ToString().Split('_'))</button>
+            }
+        }
+        @if (_buttonsE.Count is not 0)
+        {
+            for (var i = 0; i < _buttonsE.Count; ++i)
+            {
+                int index = i;
+                <button class="button-design-dark" style="color: @(_buttonsE[index].Selected ? "#ffffff" : "#000000"); background-color: @(_buttonsE[index].Selected ? "#0c63e4" : "#ffffff")" @onclick="() => { Step2Clicked(_buttonsE[index].EmotionalIssue, index); }">@string.Join(' ', _buttonsE[index].EmotionalIssue.ToString().Split('_'))</button>
+            }
+        }
+        @if (_buttonsB.Count is not 0)
+        {
+            for (var i = 0; i < _buttonsB.Count; ++i)
+            {
+                int index = i;
+                <button class="button-design-dark" style="color: @(_buttonsB[index].Selected ? "#ffffff" : "#000000"); background-color: @(_buttonsB[index].Selected ? "#0c63e4" : "#ffffff")" @onclick="() => { Step2Clicked(_buttonsB[index].Issue, index); }">@string.Join(' ', _buttonsB[index].Issue.ToString().Split('_'))</button>
+            }
+        }
+    </div>
+}
+
+@if (_level2Filters.Count is not 0)
+{
+    <div class="div-centre">
+        <button class="button-design-purple" @onclick="ApplyFilters">Apply filters</button>
+    </div>
+}
+
 <br/>
-<div class="div-wrap">
-    <br/><input type="text" placeholder="Username"><br/>
-    <input type="text" placeholder="Issue"><br/>
-    <input type="text" placeholder="Description"><br/>
-    <p>Repulation</p>
-</div>
-<div class="div-wrap">
-    <br/><input type="text" placeholder="Username"><br/>
-    <input type="text" placeholder="Issue"><br/>
-    <input type="text" placeholder="Description"><br/>
-    <p>Repulation</p>
-</div>
-<div class="div-wrap">
-    <br/><input type="text" placeholder="Username"><br/>
-    <input type="text" placeholder="Issue"><br/>
-    <input type="text" placeholder="Description"><br/>
-    <p>Repulation</p>
-</div>
-<div class="div-wrap">
-    <br/><input type="text" placeholder="Username"><br/>
-    <input type="text" placeholder="Issue"><br/>
-    <input type="text" placeholder="Description"><br/>
-    <p>Repulation</p>
-</div>
-<div class="div-wrap">
-    <br/><input type="text" placeholder="Username"><br/>
-    <input type="text" placeholder="Issue"><br/>
-    <input type="text" placeholder="Description"><br/>
-    <p>Repulation</p>
-</div>
-<div class="div-wrap">
-    <br/><input type="text" placeholder="Username"><br/>
-    <input type="text" placeholder="Issue"><br/>
-    <input type="text" placeholder="Description"><br/>
-    <p>Repulation</p>
-</div>
-<div class="div-wrap">
-    <br/><input type="text" placeholder="Username"><br/>
-    <input type="text" placeholder="Issue"><br/>
-    <input type="text" placeholder="Description"><br/>
-    <p>Repulation</p>
-</div>
-<div class="div-wrap">
-    <br/><input type="text" placeholder="Username"><br/>
-    <input type="text" placeholder="Issue"><br/>
-    <input type="text" placeholder="Description"><br/>
-    <p>Repulation</p>
-</div>
-<div class="div-wrap">
-    <br/><input type="text" placeholder="Username"><br/>
-    <input type="text" placeholder="Issue"><br/>
-    <input type="text" placeholder="Description"><br/>
-    <p>Repulation</p>
-</div>
-<div class="div-wrap">
-    <br/><input type="text" placeholder="Username"><br/>
-    <input type="text" placeholder="Issue"><br/>
-    <input type="text" placeholder="Description"><br/>
-    <p>Repulation</p>
-</div>
+
+@foreach (Account acc in _results)
+{
+    <div class="div-wrap">
+        <p>@acc.Username</p>
+        @if (acc.Level1 is 0)
+        {
+            <p>Needs help with physical issues</p>
+            <p>Issues: @GetPhysicalIssues(acc.Level2)</p>
+        }
+        @if (acc.Level1 is 1)
+        {
+            <p>Needs help with emotional issues</p>
+            <p>Issues: @GetEmotionalIssues(acc.Level2)</p>
+        }
+        @if (acc.Level1 is 2)
+        {
+            <p>Needs help with physical and emotional issues</p>
+            <p>Issues: @GetIssues(acc.Level2)</p>
+        }
+        <p>Details: @acc.Level3</p>
+        <p>Reputation: @acc.Reputation</p>
+    </div>
+}
+
+@code {
+
+    private class ButtonP // P = physical
+    {
+        public PhysicalIssue PhysicalIssue { get; set; }
+        public bool Selected { get; set; }
+    }
+
+    private class ButtonE // E = emotional
+    {
+        public EmotionalIssue EmotionalIssue { get; set; }
+        public bool Selected { get; set; }
+    }
+
+    private class ButtonB // B = both
+    {
+        public Issue Issue { get; set; }
+        public bool Selected { get; set; }
+    }
+
+    List<ButtonP> _buttonsP = new();
+    List<ButtonE> _buttonsE = new();
+    List<ButtonB> _buttonsB = new();
+    List<ushort> _level2Filters = new();
+    List<Account> _results = new();
+
+    private byte _level1Issue;
+    private bool _showIssueSelection;
+
+    private void Step1Selected(PhysicalOrEmotional selection)
+    {
+        _buttonsP = new List<ButtonP>();
+        _buttonsE = new List<ButtonE>();
+        _buttonsB = new List<ButtonB>();
+        _level2Filters = new List<ushort>();
+
+        switch (selection)
+        {
+            case PhysicalOrEmotional.Physical:
+            {
+                foreach (int i in Enum.GetValues(typeof(PhysicalIssue))) _buttonsP.Add(new ButtonP { PhysicalIssue = (PhysicalIssue)i, Selected = false });
+                break;
+            }
+            case PhysicalOrEmotional.Emotional:
+            {
+                foreach (int i in Enum.GetValues(typeof(EmotionalIssue))) _buttonsE.Add(new ButtonE { EmotionalIssue = (EmotionalIssue)i, Selected = false });
+                break;
+            }
+            case PhysicalOrEmotional.Both:
+            {
+                foreach (int i in Enum.GetValues(typeof(Issue))) _buttonsB.Add(new ButtonB { Issue = (Issue)i, Selected = false });
+                break;
+            }
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+        _level1Issue = (byte)selection;
+        _showIssueSelection = true;
+    }
+
+    private void Step2Clicked(PhysicalIssue selection, int listIndex)
+    {
+        if (_buttonsP[listIndex].Selected is false)
+        {
+            _buttonsP[listIndex].Selected = true;
+            _level2Filters.Add((ushort)selection);
+        }
+        else
+        {
+            _buttonsP[listIndex].Selected = false;
+            _level2Filters.Remove((ushort)selection);
+        }
+    }
+
+    private void Step2Clicked(EmotionalIssue selection, int listIndex)
+    {
+        if (_buttonsE[listIndex].Selected is false)
+        {
+            _buttonsE[listIndex].Selected = true;
+            _level2Filters.Add((ushort)selection);
+        }
+        else
+        {
+            _buttonsE[listIndex].Selected = false;
+            _level2Filters.Remove((ushort)selection);
+        }
+    }
+
+    private void Step2Clicked(Issue selection, int listIndex)
+    {
+        if (_buttonsB[listIndex].Selected is false)
+        {
+            _buttonsB[listIndex].Selected = true;
+            _level2Filters.Add((ushort)selection);
+        }
+        else
+        {
+            _buttonsB[listIndex].Selected = false;
+            _level2Filters.Remove((ushort)selection);
+        }
+    }
+
+    private async void ApplyFilters()
+    {
+        var temp = new List<Account>();
+
+        foreach (ushort i in _level2Filters)
+        {
+            HttpResponseMessage response = await HttpClient.GetAsync($"AccountApi/FindUsers/{_level1Issue}/{i}");
+            List<Account> result = await response.Content.ReadFromJsonAsync<List<Account>>() ?? new List<Account>();
+            temp.AddRange(result);
+        }
+
+        _results = temp.Distinct().ToList();
+        StateHasChanged();
+    }
+
+    private string GetPhysicalIssues(string issues)
+    {
+        var sb = new StringBuilder();
+        issues = issues[1..^4];
+        ushort[] split = issues.Split('\u001f').Select(ushort.Parse).ToArray();
+        foreach (ushort uint16 in split)
+        {
+            var physicalIssue = (PhysicalIssue)uint16;
+            sb.Append(string.Join(", ", physicalIssue.ToString().Split('_')));
+        }
+        var result = sb.ToString();
+        result = result[..^2];
+        return result;
+    }
+
+    private string GetEmotionalIssues(string issues)
+    {
+        var sb = new StringBuilder();
+        issues = issues[1..^4];
+        ushort[] split = issues.Split('\u001f').Select(ushort.Parse).ToArray();
+        foreach (ushort uint16 in split)
+        {
+            var emotionalIssue = (EmotionalIssue)uint16;
+            sb.Append(string.Join(", ", emotionalIssue.ToString().Split('_')));
+        }
+        var result = sb.ToString();
+        result = result[..^2];
+        return result;
+    }
+
+    private string GetIssues(string issues)
+    {
+        var sb = new StringBuilder();
+        issues = issues[1..^4];
+        ushort[] split = issues.Split('\u001f').Select(ushort.Parse).ToArray();
+        foreach (ushort uint16 in split)
+        {
+            var issue = (Issue)uint16;
+            sb.Append(string.Join(' ', issue.ToString().Split('_')) + ", ");
+        }
+        var result = sb.ToString();
+        result = result[..^2];
+        return result;
+    }
+
+}
